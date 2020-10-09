@@ -23,3 +23,14 @@ my food intake, I became familiar with the appropriate intake for myself and pau
 However, now having no access to public gyms and different fitness goals, I thought a calories & macronutrients 
 tracking application where I can add needed functionalities as I see fit would not only be interesting, but helpful to improving
 my health and wellness. 
+
+##User Stories
+In the context of a calories & macros tracker application: 
+- As a user, I want to be able to set daily calories goals
+- As a user, I want to be able to set macronutrients goal as percentages 
+- As a user, I want to be able to see calculated macronutrient goals by grams (g)
+- As a user, I want to be able to input grams (g) of macronutrients consumed for each meal for each day
+- As a user, I want to be able to see whether I have met my goals
+- As a user, if I did not meet my goal, I want to be able to see how far off from the goal I was in grams (g)
+- As a user, I want to be able to see calories & macronutrients trends in the past week
+
