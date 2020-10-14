@@ -18,6 +18,7 @@ public class TrackerApp {
         runTracker();
     }
 
+    //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
     //MODIFIES: this
     //EFFECTS: prompts user to select day of week, calorie and macro goals, and processes user input
     public void runTracker() {
@@ -50,7 +51,7 @@ public class TrackerApp {
 
     //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
     //MODIFIES: this
-    //EFFECTS: selects day of the week, monday through sunday , in weekly summary
+    //EFFECTS: selects day of the week, monday through sunday, in weekly summary
     public void selectDay(String command) {
         switch (command) {
             case "mon":
@@ -77,7 +78,8 @@ public class TrackerApp {
         }
     }
 
-    //MODIFIES: ???
+    //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
+    //MODIFIES: this
     //EFFECTS: processes user command
     private void processCommand(String command) {
         if (command.equals("i")) {
@@ -101,7 +103,7 @@ public class TrackerApp {
         System.out.println("\tsun");
     }
 
-    // EFFECTS: displays menu of options to user
+    //EFFECTS: displays menu of options to user
     public void displayOptions() {
         System.out.println("\nSelect from:");
         System.out.println("\ti -> input meal");

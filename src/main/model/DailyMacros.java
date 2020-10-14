@@ -1,5 +1,6 @@
 package model;
 
+// Represents a day's calories & macronutrient goals and records
 public class DailyMacros {
     private static final int calPerGramCarb = 4;
     private static final int calPerGramProtein = 4;
@@ -37,7 +38,7 @@ public class DailyMacros {
     }
 
     //MODIFIES: this
-    //EFFECTS: calculates macro goals in grams according to inputted goal breakdown in percentages,
+    //EFFECTS: calculates macro goals in grams according to inputted target breakdown in percentages,
     //         and sets goals to nearest integer in grams
     public void calculateMacroGoals() {
         carbsGoalGrams = (int) Math.round((calorieGoals * carbsGoalPercentage) / calPerGramCarb);
@@ -45,16 +46,14 @@ public class DailyMacros {
         fatGoalGrams = (int) Math.round((calorieGoals * fatGoalPercentage) / calPerGramFat);
     }
 
-    //MODIFIES: this
-    //EFFECTS: calculates and updates total calories consumed, and returns the difference
-    //         between actual consumption and calorie goal
+    //EFFECTS: returns the difference between actual calories consumed and calorie goal
     public int compareCalorieGoals() {
         return totalCaloriesConsumed - calorieGoals;
     }
 
     //REQUIRES: grams >= 0
     //MODIFIES: this
-    //EFFECTS: adds amount in grams of carbs to carbs amount consumed
+    //EFFECTS: adds amount to total carbs amount consumed and adds to total calories consumed
     public void addCarbsConsumed(int grams) {
         carbsConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramCarb;
@@ -62,7 +61,7 @@ public class DailyMacros {
 
     //REQUIRES: grams >= 0
     //MODIFIES: this
-    //EFFECTS: adds amount in grams of protein to protein amount consumed
+    //EFFECTS: adds amount to total protein amount consumed and adds to total calories consumed
     public void addProteinConsumed(int grams) {
         proteinConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramProtein;
@@ -70,7 +69,7 @@ public class DailyMacros {
 
     //REQUIRES: grams >= 0
     //MODIFIES: this
-    //EFFECTS: adds amount in grams of fat to fat amount consumed
+    //EFFECTS: adds amount to total fat amount consumed and adds to total calories consumed
     public void addFatConsumed(int grams) {
         fatConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramFat;

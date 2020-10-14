@@ -13,7 +13,7 @@ class WeeklySummaryTest {
 
     @BeforeEach
     void setup() {
-         testWeeklySummary= new WeeklySummary();
+        testWeeklySummary = new WeeklySummary();
     }
 
     @Test
@@ -24,13 +24,13 @@ class WeeklySummaryTest {
 
     @Test
     void testGetDailyMacro() {
-        DailyMacros indexZero =  testWeeklySummary.getDailyMacro(0);
+        DailyMacros indexZero = testWeeklySummary.getDailyMacro(0);
         indexZero.setCalorieGoal(2500);
 
-        DailyMacros indexFour =  testWeeklySummary.getDailyMacro(4);
+        DailyMacros indexFour = testWeeklySummary.getDailyMacro(4);
         indexFour.setCalorieGoal(2000);
 
-        DailyMacros indexSix =  testWeeklySummary.getDailyMacro(6);
+        DailyMacros indexSix = testWeeklySummary.getDailyMacro(6);
         indexSix.setCalorieGoal(1500);
 
         assertEquals(2500, testWeeklySummary.getDailyMacro(0).getCalorieGoal());

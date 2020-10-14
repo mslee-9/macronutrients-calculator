@@ -23,9 +23,9 @@ class DailyMacrosTest {
 
         testDailyMacros.calculateMacroGoals();
 
-        assertEquals(200,testDailyMacros.getCarbsGoalGrams());
-        assertEquals(150,testDailyMacros.getProteinGoalGrams());
-        assertEquals(67,testDailyMacros.getFatGoalGrams());
+        assertEquals(200, testDailyMacros.getCarbsGoalGrams());
+        assertEquals(150, testDailyMacros.getProteinGoalGrams());
+        assertEquals(67, testDailyMacros.getFatGoalGrams());
     }
 
     @Test
