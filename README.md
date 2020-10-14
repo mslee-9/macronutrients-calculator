@@ -30,4 +30,4 @@ In the context of a calories & macros tracker application:
 - As a user, I want to be able to set macronutrients goal as percentages 
 - As a user, I want to be able to see calculated macronutrient goals by grams (g)
 - As a user, I want to be able to input grams (g) of macronutrients consumed for each meal for each day
-- As a user, I want to be able to see whether I have met my goals
+
