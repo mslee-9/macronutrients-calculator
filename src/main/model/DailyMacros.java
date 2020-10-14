@@ -1,12 +1,11 @@
 package model;
 
 public class DailyMacros {
-    private static int calPerGramCarb = 4;
-    private static int calPerGramProtein = 4;
-    private static int calPerGramFat = 9;
+    private static final int calPerGramCarb = 4;
+    private static final int calPerGramProtein = 4;
+    private static final int calPerGramFat = 9;
 
     private int calorieGoals;
-
     private double carbsGoalPercentage;
     private double proteinGoalPercentage;
     private double fatGoalPercentage;
@@ -15,71 +14,113 @@ public class DailyMacros {
     private int proteinGoalGrams;
     private int fatGoalGrams;
 
+    private int totalCaloriesConsumed;
     private int carbsConsumed;
     private int proteinConsumed;
     private int fatConsumed;
 
     //EFFECTS: constructs an instance of DailyMacros with default settings of 0
     public DailyMacros() {
-        this.carbsConsumed = 0;
-        this.proteinConsumed = 0;
-        this.fatConsumed = 0;
-        this.carbsGoalGrams = 0;
-        this.proteinGoalGrams = 0;
-        this.fatGoalGrams = 0;
+        calorieGoals = 0;
+        carbsGoalPercentage = 0;
+        proteinGoalPercentage = 0;
+        fatGoalPercentage = 0;
+
+        carbsGoalGrams = 0;
+        proteinGoalGrams = 0;
+        fatGoalGrams = 0;
+
+        totalCaloriesConsumed = 0;
+        carbsConsumed = 0;
+        proteinConsumed = 0;
+        fatConsumed = 0;
     }
 
     //MODIFIES: this
-    //EFFECTS: calculates macro goals according to inputted percentages, and sets goals by grams
-    public String calculateMacroGoals() {
+    //EFFECTS: calculates macro goals in grams according to inputted goal breakdown in percentages,
+    //         and sets goals to nearest integer in grams
+    public void calculateMacroGoals() {
         carbsGoalGrams = (int) Math.round((calorieGoals * carbsGoalPercentage) / calPerGramCarb);
         proteinGoalGrams = (int) Math.round((calorieGoals * proteinGoalPercentage) / calPerGramProtein);
         fatGoalGrams = (int) Math.round((calorieGoals * fatGoalPercentage) / calPerGramFat);
-
-        return "Carbs:" + carbsGoalGrams + "Protein:" + proteinGoalGrams + "Fat:" + fatGoalGrams;
     }
 
-//    public String compareGoals() {
-//        int totalCalories = carbsConsumed * calPerGramCarb + proteinConsumed * calPerGramProtein + fatConsumed * calPerGramProtein;
-//        int calorieDifference = calorieGoals - totalCalories;
-//
-//    }
+    //MODIFIES: this
+    //EFFECTS: calculates and updates total calories consumed, and returns the difference
+    //         between actual consumption and calorie goal
+    public int compareCalorieGoals() {
+        return totalCaloriesConsumed - calorieGoals;
+    }
+
+    //REQUIRES: grams >= 0
+    //MODIFIES: this
+    //EFFECTS: adds amount in grams of carbs to carbs amount consumed
+    public void addCarbsConsumed(int grams) {
+        carbsConsumed += grams;
+        totalCaloriesConsumed += grams * calPerGramCarb;
+    }
+
+    //REQUIRES: grams >= 0
+    //MODIFIES: this
+    //EFFECTS: adds amount in grams of protein to protein amount consumed
+    public void addProteinConsumed(int grams) {
+        proteinConsumed += grams;
+        totalCaloriesConsumed += grams * calPerGramProtein;
+    }
+
+    //REQUIRES: grams >= 0
+    //MODIFIES: this
+    //EFFECTS: adds amount in grams of fat to fat amount consumed
+    public void addFatConsumed(int grams) {
+        fatConsumed += grams;
+        totalCaloriesConsumed += grams * calPerGramFat;
+    }
+
+    public int getTotalCaloriesConsumed() {
+        return totalCaloriesConsumed;
+    }
 
     public int getCalorieGoal() {
         return calorieGoals;
     }
 
-    public int getCarbsGrams() {
+    public int getCarbsGoalGrams() {
         return carbsGoalGrams;
     }
 
-    public int getProteinGrams() {
+    public int getProteinGoalGrams() {
         return proteinGoalGrams;
     }
 
-    public int getFatGrams() {
+    public int getFatGoalGrams() {
         return fatGoalGrams;
+    }
+
+    public int getCarbsConsumedGrams() {
+        return carbsConsumed;
+    }
+
+    public int getProteinConsumedGrams() {
+        return proteinConsumed;
+    }
+
+    public int getFatConsumedGrams() {
+        return fatConsumed;
     }
 
     public void setCalorieGoal(int calorieGoal) {
         calorieGoals = calorieGoal;
     }
 
-    //MODIFIES: this
-    //EFFECTS:
     public void setCarbsGoalsPercentage(double carbsGoal) {
         carbsGoalPercentage = carbsGoal;
     }
 
-    //MODIFIES: this
-    //EFFECTS:
     public void setProteinGoalsPercentage(double proteinGoal) {
         proteinGoalPercentage = proteinGoal;
     }
 
-    //MODIFIES: this
-    //EFFECTS:
-    public void getFatGaolsPercentage(double fatGoal) {
+    public void setFatGoalsPercentage(double fatGoal) {
         fatGoalPercentage = fatGoal;
     }
 }

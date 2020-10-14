@@ -6,7 +6,8 @@ public class WeeklySummary {
 
     private ArrayList<DailyMacros> sevenDayRecord;
 
-    //EFFECTS: construct new weekly summary with seven entries of DailyMacros for sevenDayRecord
+    //EFFECTS: construct new weekly summary with seven instances of DailyMacros
+    //         representing seven days in a week
     public WeeklySummary() {
         sevenDayRecord = new ArrayList();
 
@@ -15,8 +16,8 @@ public class WeeklySummary {
         }
     }
 
-    //REQUIRES: index must be between and including 0 and 6
-    //EFFECTS: returns DailyMacros instance at corresponding index of sevendayRecord
+    //REQUIRES: 0<= index <= 6
+    //EFFECTS: returns DailyMacros instance at corresponding index of sevenDayRecord
     public DailyMacros getDailyMacro(int index) {
         return sevenDayRecord.get(index);
     }
