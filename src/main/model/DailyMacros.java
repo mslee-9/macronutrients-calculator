@@ -1,7 +1,11 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a day's calories & macronutrient goals and records
-public class DailyMacros {
+public class DailyMacros implements Writable {
     private static final int calPerGramCarb = 4;
     private static final int calPerGramProtein = 4;
     private static final int calPerGramFat = 9;
@@ -121,5 +125,48 @@ public class DailyMacros {
 
     public void setFatGoalsPercentage(double fatGoal) {
         fatGoalPercentage = fatGoal;
+    }
+
+    public void setCarbsGoalsGrams(int carbsGoal) {
+        carbsGoalGrams = carbsGoal;
+    }
+
+    public void setProteinGoalsGrams(int proteinGoal) {
+        proteinGoalGrams = proteinGoal;
+    }
+
+    public void setFatGoalsGrams(int fatGoal) {
+        fatGoalGrams = fatGoal;
+    }
+
+    public void setCaloriesConsumed(int calorieGoal) {
+        calorieGoals = calorieGoal;
+    }
+
+    public void setCarbsConsumed(int carbs) {
+        carbsConsumed = carbs;
+    }
+
+    public void setProteinConsumed(int protein) {
+        proteinConsumed = protein;
+    }
+
+    public void setFatConsumed(int fat) {
+        fatConsumed = fat;
+    }
+
+    @Override
+    //SOURCE: JsonSerializationDemo
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("calorie goal", calorieGoals);
+        json.put("carbs goal (g)", carbsGoalGrams);
+        json.put("protein goal (g)", proteinGoalGrams);
+        json.put("fat goal (g)", fatGoalGrams);
+        json.put("calories consumed", totalCaloriesConsumed);
+        json.put("carbs consumed (g)", carbsConsumed);
+        json.put("protein consumed (g)", proteinConsumed);
+        json.put("fat consumed (g)", fatConsumed);
+        return json;
     }
 }

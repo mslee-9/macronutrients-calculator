@@ -13,12 +13,13 @@ class WeeklySummaryTest {
 
     @BeforeEach
     void setup() {
-        testWeeklySummary = new WeeklySummary();
+        testWeeklySummary = new WeeklySummary("Stella's Week 1");
     }
 
     @Test
     void testConstructor() {
         ArrayList<DailyMacros> testSevenDayRecord = testWeeklySummary.getSevenDayRecord();
+        assertEquals("Stella's Week 1", testWeeklySummary.getName());
         assertEquals(7, testSevenDayRecord.size());
     }
 

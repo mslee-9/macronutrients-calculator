@@ -3,36 +3,62 @@ package ui;
 
 import model.DailyMacros;
 import model.WeeklySummary;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 //Calories & macros tracking application
 public class TrackerApp {
+    private static final String JSON_STORE = "./data/workroom.json";
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     private DailyMacros selected;
     private WeeklySummary weeklysummary;
     private Scanner input = new Scanner(System.in);
 
     //EFFECTS: runs the tracker application
     public TrackerApp() {
-        weeklysummary = new WeeklySummary();
-        runTracker();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        startApplication();
     }
 
     //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
     //MODIFIES: this
     //EFFECTS: prompts user to select day of week, calorie and macro goals, and processes user input
+    public void startApplication() {
+        boolean keepGoing = true;
+        String command;
+
+        while (keepGoing) {
+            displayInitialOptions();
+            command = input.next();
+            if (command.equals("q")) {
+                keepGoing = false;
+            } else {
+                processInitialCommand(command);
+            }
+        }
+    }
+
     public void runTracker() {
         boolean keepGoing = true;
         String command;
 
+        welcomeMessage();
+        command = input.next();
+        selectNameAndWeek(command);
+
         displayDaysOfWeek();
         command = input.next();
-        command = command.toLowerCase();
+//        command = command.toLowerCase();
         selectDay(command);
 
         inputCalorieGoals();
         inputMacrosGoals();
-
         while (keepGoing) {
             displayOptions();
             command = input.next();
@@ -47,6 +73,42 @@ public class TrackerApp {
                 processCommand(command);
             }
         }
+    }
+
+    private void displayInitialOptions() {
+        System.out.println("\nSelect from:");
+        System.out.println("\tt -> track");
+        System.out.println("\ts -> save daily record to file");
+        System.out.println("\tl -> load work room from file");
+        System.out.println("\tq -> quit");
+    }
+
+    //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
+    //MODIFIES: this
+    //EFFECTS: processes user command
+    private void processInitialCommand(String command) {
+        if (command.equals("t")) {
+            runTracker();
+        } else if (command.equals("s")) {
+            saveWeeklySummary();
+        } else if (command.equals("l")) {
+            loadWeeklySummary();
+        } else {
+            System.out.println("Choose valid option");
+        }
+    }
+
+    private void loadWeeklySummary() {
+        try {
+            weeklysummary = jsonReader.read();
+            System.out.println("Loaded " + weeklysummary.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
+    private void welcomeMessage() {
+        System.out.println("Welcome!\nPlease enter your name & week (e.g. 'Sarah's Week 1')");
     }
 
     //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
@@ -86,9 +148,28 @@ public class TrackerApp {
             inputMeal();
         } else if (command.equals("v")) {
             viewSummary();
+        } else if (command.equals("s")) {
+            saveWeeklySummary();
         } else {
             System.out.println("Choose valid option");
         }
+    }
+
+    private void saveWeeklySummary() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(weeklysummary);
+            jsonWriter.close();
+            System.out.println("Saved " + weeklysummary.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: sets the name of weekly summary
+    public void selectNameAndWeek(String command) {
+        weeklysummary = new WeeklySummary(command);
     }
 
     //EFFECTS: displays days of week to user
@@ -108,6 +189,7 @@ public class TrackerApp {
         System.out.println("\nSelect from:");
         System.out.println("\ti -> input meal");
         System.out.println("\tv -> end day and view summary");
+        System.out.println("\ts -> save daily record to file");
         System.out.println("\tq -> quit");
     }
 
