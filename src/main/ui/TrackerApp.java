@@ -49,29 +49,44 @@ public class TrackerApp {
         String command;
 
         welcomeMessageTracker();
-
-        displayDaysOfWeek();
-        command = input.next();
-        command = command.toLowerCase();
-        selectDay(command);
-
+        displayWeek();
         promptInputGoals();
 
         while (keepGoing) {
-            displayOptions();
-            command = input.next();
-            command = command.toLowerCase();
+            command = displayTrackerOptions();
 
-            if (command.equals("q")) {
-                System.out.println("Quitting tracker. Bye!");
-                keepGoing = false;
-            } else if (command.equals("v")) {
+            if (command.equals("v")) {
                 processCommand(command);
-                keepGoing = false;
+                System.out.println("\nDo you want to save your record?\n y -> yes \n n -> no");
+                command = input.next();
+                if (command.equals("y")) {
+                    saveWeeklySummary();
+                    System.out.println("Your record was saved! Goodbye");
+                    keepGoing = false;
+                } else {
+                    System.out.println("Quitting tracker. Goodbye!");
+                    keepGoing = false;
+                }
             } else {
                 processCommand(command);
             }
         }
+    }
+
+    private String displayTrackerOptions() {
+        String command;
+        displayOptions();
+        command = input.next();
+        command = command.toLowerCase();
+        return command;
+    }
+
+    private void displayWeek() {
+        String command;
+        displayDaysOfWeek();
+        command = input.next();
+        command = command.toLowerCase();
+        selectDay(command);
     }
 
     private void welcomeMessageTracker() {
@@ -112,8 +127,8 @@ public class TrackerApp {
 
     private void loadWeeklySummary() {
         try {
-            weeklysummary = jsonReader.read();
             System.out.println("Loaded " + weeklysummary.getName() + " from " + JSON_STORE);
+            weeklysummary = jsonReader.read();
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
@@ -208,7 +223,6 @@ public class TrackerApp {
         System.out.println("\ti -> input meal");
         System.out.println("\tv -> end day and view summary");
         System.out.println("\ts -> save daily record to file");
-        System.out.println("\tq -> quit tracking");
     }
 
     //MODIFIES: this
