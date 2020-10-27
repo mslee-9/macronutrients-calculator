@@ -5,13 +5,15 @@ import org.json.JSONObject;
 import persistence.Writable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 // Represents a collection of records of each day in a week from Monday through Sunday
 public class WeeklySummary implements Writable {
     private String name;
     private ArrayList<DailyMacros> sevenDayRecord;
 
-    //EFFECTS: construct new weekly summary with seven instances of DailyMacros
+    //EFFECTS: construct new weekly summary with name and seven instances of DailyMacros
     //         representing seven days in a week Monday through Sunday
     public WeeklySummary(String name) {
         this.name = name;
@@ -28,6 +30,11 @@ public class WeeklySummary implements Writable {
         return sevenDayRecord.get(index);
     }
 
+    //EFFECTS: returns an unmodifiable list of sevenDayRecord in this weekly summary
+    public List<DailyMacros> getWeeklySummaryList() {
+        return Collections.unmodifiableList(sevenDayRecord);
+    }
+
     public ArrayList<DailyMacros> getSevenDayRecord() {
         return sevenDayRecord;
     }
@@ -37,7 +44,7 @@ public class WeeklySummary implements Writable {
     }
 
     @Override
-    //SOURCE: JsonSerializationDemo
+    //SOURCE: JsonSerializationDemo - this method was built based on JsonSerializationDemo
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name & week", name);
@@ -45,8 +52,8 @@ public class WeeklySummary implements Writable {
         return json;
     }
 
-    //SOURCE: JsonSerializationDemo
-    // EFFECTS: returns Daily Macros in this WeeklySummary as a JSON array
+    //SOURCE: JsonSerializationDemo - this method was built based on JsonSerializationDemo
+    //EFFECTS: returns Daily Macros in this WeeklySummary as a JSON array
     private JSONArray dailyMacrosToJson() {
         JSONArray jsonArray = new JSONArray();
 

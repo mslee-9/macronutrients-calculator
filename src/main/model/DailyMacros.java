@@ -156,7 +156,8 @@ public class DailyMacros implements Writable {
     }
 
     @Override
-    //SOURCE: JsonSerializationDemo
+    //SOURCE: JsonSerializationDemo - this method was built based on the toJSON method in JsonSerializationDemo
+    //EFFECTS: constructs and returns new JSONObject
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("calorie goal", calorieGoals);
@@ -168,5 +169,16 @@ public class DailyMacros implements Writable {
         json.put("protein consumed (g)", proteinConsumed);
         json.put("fat consumed (g)", fatConsumed);
         return json;
+    }
+
+    //EFFECTS: returns a formatted list of daily macros record summary
+    public String formatNicely() {
+        String s = "";
+        s += "\tCalorie Goal: " + calorieGoals + " | Calories consumed: " + totalCaloriesConsumed;
+        s += "\n\tCarbs Goal: " + carbsGoalGrams + "   | Carbs consumed: " + carbsConsumed;
+        s += "\n\tProtein Goal: " + proteinGoalGrams + " | Protein consumed: " + proteinConsumed;
+        s += "\n\tFat Goal: " + fatGoalGrams + "     | Fat consumed: " + fatConsumed;
+        s += "\n";
+        return s;
     }
 }

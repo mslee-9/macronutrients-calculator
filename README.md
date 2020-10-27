@@ -31,5 +31,5 @@ In the context of a calories & macronutrients tracker application:
 - As a user, I want to be able to input one or more meals for each day and store in weekly record
 - As a user, I want to be able to see whether daily goals were met
 - As a user, I want to be able to save my daily records 
-- As a user, I want to be able to load and view daily records from a file
+- As a user, I want to be able to load and view printed weekly records from a file
 

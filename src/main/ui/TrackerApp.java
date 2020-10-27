@@ -8,8 +8,11 @@ import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
+//SOURCE: JsonSerializationDemo - few methods in this class pertaining to the persistence function
+//                                were built based on JsonSerializationDemo
 //Calories & macros tracking application
 public class TrackerApp {
     private static final String JSON_STORE = "./data/weeklySummary.json";
@@ -26,9 +29,9 @@ public class TrackerApp {
         startApplication();
     }
 
-    //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
+    //Source: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
     //MODIFIES: this
-    //EFFECTS: prompts user to select day of week, calorie and macro goals, and processes user input
+    //EFFECTS: starts application by displaying initial options and processes user input
     public void startApplication() {
         boolean keepGoing = true;
         String command;
@@ -44,6 +47,9 @@ public class TrackerApp {
         }
     }
 
+    //Source: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
+    //MODIFIES: this
+    //EFFECTS: prompts user to select day of week, calorie and macro goals, and processes user input
     public void runTracker() {
         boolean keepGoing = true;
         String command;
@@ -73,6 +79,7 @@ public class TrackerApp {
         }
     }
 
+    //EFFECTS: displays tracker options
     private String displayTrackerOptions() {
         String command;
         displayOptions();
@@ -81,6 +88,7 @@ public class TrackerApp {
         return command;
     }
 
+    //EFFECTS: displays days of week
     private void displayWeek() {
         String command;
         displayDaysOfWeek();
@@ -89,22 +97,26 @@ public class TrackerApp {
         selectDay(command);
     }
 
+    //EFFECTS: displays welcome message and prompts user to name the week
     private void welcomeMessageTracker() {
         String command;
-        welcomeMessage();
+        System.out.println("Welcome!\nPlease enter your name & week (e.g. SarahWeek1)");
         command = input.next();
         selectNameAndWeek(command);
     }
 
+    //EFFECTS: prompts user to input calories and macros goals
     private void promptInputGoals() {
         inputCalorieGoals();
         inputMacrosGoals();
     }
 
+    //EFFECTS: displays initial options menu
     private void displayInitialOptions() {
         System.out.println("\nSelect from:");
         System.out.println("\tt -> track");
-        System.out.println("\tl -> load work room from file");
+        System.out.println("\tl -> load weekly summary from file");
+        System.out.println("\tp -> print weekly summary in file");
         System.out.println("\tq -> quit");
     }
 
@@ -119,23 +131,34 @@ public class TrackerApp {
             case "l":
                 loadWeeklySummary();
                 break;
+            case "p":
+                printWeeklySummary();
+                break;
             default:
                 System.out.println("Choose valid option");
                 break;
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads weekly summary from file
     private void loadWeeklySummary() {
         try {
-            System.out.println("Loaded " + weeklysummary.getName() + " from " + JSON_STORE);
             weeklysummary = jsonReader.read();
+            System.out.println("Loaded " + weeklysummary.getName() + " from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 
-    private void welcomeMessage() {
-        System.out.println("Welcome!\nPlease enter your name & week (e.g. 'Sarah'sWeek1')");
+    //EFFECTS: prints all daily macros record in weekly summary to the console
+    private void printWeeklySummary() {
+        System.out.println("Here is the weekly summary from Monday to Sunday:\n");
+        List<DailyMacros> dailyMacros = weeklysummary.getWeeklySummaryList();
+
+        for (DailyMacros dm: dailyMacros) {
+            System.out.println(dm.formatNicely());
+        }
     }
 
     //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
