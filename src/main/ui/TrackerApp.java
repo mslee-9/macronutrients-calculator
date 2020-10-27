@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 //Calories & macros tracking application
 public class TrackerApp {
-    private static final String JSON_STORE = "./data/workroom.json";
+    private static final String JSON_STORE = "./data/weeklySummary.json";
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private DailyMacros selected;
@@ -54,7 +54,7 @@ public class TrackerApp {
 
         displayDaysOfWeek();
         command = input.next();
-//        command = command.toLowerCase();
+        command = command.toLowerCase();
         selectDay(command);
 
         inputCalorieGoals();
@@ -65,6 +65,7 @@ public class TrackerApp {
             command = command.toLowerCase();
 
             if (command.equals("q")) {
+                System.out.println("Quitting tracker. Bye!");
                 keepGoing = false;
             } else if (command.equals("v")) {
                 processCommand(command);
@@ -108,7 +109,7 @@ public class TrackerApp {
     }
 
     private void welcomeMessage() {
-        System.out.println("Welcome!\nPlease enter your name & week (e.g. 'Sarah's Week 1')");
+        System.out.println("Welcome!\nPlease enter your name & week (e.g. 'Sarah'sWeek1')");
     }
 
     //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
@@ -138,6 +139,7 @@ public class TrackerApp {
                 selected = weeklysummary.getDailyMacro(6);
                 break;
         }
+
     }
 
     //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
@@ -190,7 +192,7 @@ public class TrackerApp {
         System.out.println("\ti -> input meal");
         System.out.println("\tv -> end day and view summary");
         System.out.println("\ts -> save daily record to file");
-        System.out.println("\tq -> quit");
+        System.out.println("\tq -> quit tracking");
     }
 
     //MODIFIES: this

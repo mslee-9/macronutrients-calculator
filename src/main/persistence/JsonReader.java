@@ -37,21 +37,21 @@ public class JsonReader {
     }
 
     private WeeklySummary parseWeeklySummary(JSONObject jsonObject) {
-        String name = jsonObject.getString("name");
+        String name = jsonObject.getString("name & week");
         WeeklySummary ws = new WeeklySummary(name);
         addSevenDayRecord(ws, jsonObject);
         return ws;
     }
 
     private void addSevenDayRecord(WeeklySummary ws, JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.getJSONArray("sevenDayRecord");
-        for (Object json: jsonArray) {
-            JSONObject nextDailyMacros = (JSONObject) json;
-            addDailyMacros(ws, nextDailyMacros);
+        JSONArray jsonArray = jsonObject.getJSONArray("weekly record");
+        for (int i = 0; i < 7; i++) {
+            JSONObject nextDailyMacros = (JSONObject) jsonArray.get(i);
+            addDailyMacros(ws, nextDailyMacros, i);
         }
     }
 
-    private void addDailyMacros(WeeklySummary ws, JSONObject jsonObject) {
+    private void addDailyMacros(WeeklySummary ws, JSONObject jsonObject, int day) {
         int calGoal = jsonObject.getInt("calorie goal");
         int carbsGoal = jsonObject.getInt("carbs goal (g)");
         int proteinGoal = jsonObject.getInt("protein goal (g)");
@@ -61,7 +61,7 @@ public class JsonReader {
         int proteinConsumed = jsonObject.getInt("protein consumed (g)");
         int fatConsumed = jsonObject.getInt("fat consumed (g)");
 
-        DailyMacros dm = new DailyMacros();//PARAMETERS
+        DailyMacros dm = new DailyMacros();
         dm.setCalorieGoal(calGoal);
         dm.setCarbsGoalsGrams(carbsGoal);
         dm.setProteinGoalsGrams(proteinGoal);
@@ -70,6 +70,6 @@ public class JsonReader {
         dm.setCarbsConsumed(carbsConsumed);
         dm.setProteinConsumed(proteinConsumed);
         dm.setFatConsumed(fatConsumed);
-        //ADD INTO WR
+        ws.getSevenDayRecord().set(day,dm);
     }
 }

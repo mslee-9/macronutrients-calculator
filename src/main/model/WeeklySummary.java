@@ -40,7 +40,7 @@ public class WeeklySummary implements Writable {
     //SOURCE: JsonSerializationDemo
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        //SOMETHING?? NAME??
+        json.put("name & week", name);
         json.put("weekly record", dailyMacrosToJson());
         return json;
     }

@@ -81,4 +81,5 @@ class DailyMacrosTest {
         testDailyMacros.addFatConsumed(150);
         assertEquals(152, testDailyMacros.getFatConsumedGrams());
     }
+
 }

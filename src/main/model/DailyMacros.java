@@ -139,8 +139,8 @@ public class DailyMacros implements Writable {
         fatGoalGrams = fatGoal;
     }
 
-    public void setCaloriesConsumed(int calorieGoal) {
-        calorieGoals = calorieGoal;
+    public void setCaloriesConsumed(int caloriesConsumed) {
+        totalCaloriesConsumed = caloriesConsumed;
     }
 
     public void setCarbsConsumed(int carbs) {
