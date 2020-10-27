@@ -48,17 +48,15 @@ public class TrackerApp {
         boolean keepGoing = true;
         String command;
 
-        welcomeMessage();
-        command = input.next();
-        selectNameAndWeek(command);
+        welcomeMessageTracker();
 
         displayDaysOfWeek();
         command = input.next();
         command = command.toLowerCase();
         selectDay(command);
 
-        inputCalorieGoals();
-        inputMacrosGoals();
+        promptInputGoals();
+
         while (keepGoing) {
             displayOptions();
             command = input.next();
@@ -76,10 +74,21 @@ public class TrackerApp {
         }
     }
 
+    private void welcomeMessageTracker() {
+        String command;
+        welcomeMessage();
+        command = input.next();
+        selectNameAndWeek(command);
+    }
+
+    private void promptInputGoals() {
+        inputCalorieGoals();
+        inputMacrosGoals();
+    }
+
     private void displayInitialOptions() {
         System.out.println("\nSelect from:");
         System.out.println("\tt -> track");
-        System.out.println("\ts -> save daily record to file");
         System.out.println("\tl -> load work room from file");
         System.out.println("\tq -> quit");
     }
@@ -88,14 +97,16 @@ public class TrackerApp {
     //MODIFIES: this
     //EFFECTS: processes user command
     private void processInitialCommand(String command) {
-        if (command.equals("t")) {
-            runTracker();
-        } else if (command.equals("s")) {
-            saveWeeklySummary();
-        } else if (command.equals("l")) {
-            loadWeeklySummary();
-        } else {
-            System.out.println("Choose valid option");
+        switch (command) {
+            case "t":
+                runTracker();
+                break;
+            case "l":
+                loadWeeklySummary();
+                break;
+            default:
+                System.out.println("Choose valid option");
+                break;
         }
     }
 
@@ -146,14 +157,19 @@ public class TrackerApp {
     //MODIFIES: this
     //EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("i")) {
-            inputMeal();
-        } else if (command.equals("v")) {
-            viewSummary();
-        } else if (command.equals("s")) {
-            saveWeeklySummary();
-        } else {
-            System.out.println("Choose valid option");
+        switch (command) {
+            case "i":
+                inputMeal();
+                break;
+            case "v":
+                viewSummary();
+                break;
+            case "s":
+                saveWeeklySummary();
+                break;
+            default:
+                System.out.println("Choose valid option");
+                break;
         }
     }
 
