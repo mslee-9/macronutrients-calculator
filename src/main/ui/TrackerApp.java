@@ -67,7 +67,7 @@ public class TrackerApp {
                 command = input.next();
                 if (command.equals("y")) {
                     saveWeeklySummary();
-                    System.out.println("Your record was saved! Goodbye");
+                    System.out.println("Your record was saved. Goodbye!");
                     keepGoing = false;
                 } else {
                     System.out.println("Quitting tracker. Goodbye!");
