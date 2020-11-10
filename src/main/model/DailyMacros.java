@@ -173,12 +173,12 @@ public class DailyMacros implements Writable {
 
     //EFFECTS: returns a formatted list of daily macros record summary
     public String formatNicely() {
-        String s = "";
-        s += "\tCalorie Goal: " + calorieGoals + " | Calories consumed: " + totalCaloriesConsumed;
-        s += "\n\tCarbs Goal: " + carbsGoalGrams + "   | Carbs consumed: " + carbsConsumed;
-        s += "\n\tProtein Goal: " + proteinGoalGrams + " | Protein consumed: " + proteinConsumed;
-        s += "\n\tFat Goal: " + fatGoalGrams + "     | Fat consumed: " + fatConsumed;
-        s += "\n";
+        String s = "<html>";
+        s += "<br/>" + "Calorie Goal: " + calorieGoals + " | Calories consumed: " + totalCaloriesConsumed;
+        s += "<br/>Carbs Goal: " + carbsGoalGrams + "   | Carbs consumed: " + carbsConsumed;
+        s += "<br/>Protein Goal: " + proteinGoalGrams + " | Protein consumed: " + proteinConsumed;
+        s += "<br/>Fat Goal: " + fatGoalGrams + "     | Fat consumed: " + fatConsumed;
+        s += "<br/></html>";
         return s;
     }
 }
