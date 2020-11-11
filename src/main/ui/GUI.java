@@ -1,54 +1,77 @@
 package ui;
 
-import javafx.scene.input.InputMethodTextRun;
 import model.DailyMacros;
 import model.WeeklySummary;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
-import javax.sound.midi.Soundbank;
-import javax.sound.midi.Track;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.List;
-import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
-
-//  Labels
-    private JLabel label;
-    private JLabel loadLabel;
-    private JLabel printLabel;
-    private JLabel welcomeLabel;
-    private JLabel trackerLabel;
-    private JPanel panel;
-    private DefaultListModel listModel;
-    private JList list;
-    private JTextField field;
-    private JTextField weekDayName;
-    JTextField calorieGoal;
-    private JPanel trackerPanel;
-    private JLabel daysOfWeek;
-
     private static final String JSON_STORE = "./data/weeklySummary.json";
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private DailyMacros selected;
     private WeeklySummary weeklysummary;
-    private Scanner input = new Scanner(System.in);
-    private JFrame trackerFrame;
+
+    //  Labels
+    private JLabel loadLabel = new JLabel();
+    private JLabel printLabel = new JLabel();
+    private JLabel welcomeLabel;
+
+    private JPanel trackerPanel;
+    private JLabel daysOfWeek;
+    private JLabel calorieGoalInput;
+    private JLabel fatGoalInput;
+    private JLabel carbsGoalInput;
+    private JLabel proteinGoalInput;
+
+    private JLabel enterCarbs;
+    private JLabel enterProtein;
+    private JLabel enterFat;
+    private JLabel weeklySummary = new JLabel();
+
+    // Buttons
+    private JButton enterButton;
+    private JButton enterButton2;
+    private JButton enterButton3;
+    private JButton enterButton4;
+    private JButton enterButton5;
+    private JButton inputMeal;
+    private JButton viewSummary;
+
+    //TEXTFIELDS
     private JTextField weekName;
+    private JTextField calorieGoal;
+    private JTextField carbsGoal;
+    private JTextField proteinGoal;
+    private JTextField fatGoal;
+    private JTextField weekDayName;
+    private JTextField carbsMealInput;
+    private JTextField proteinMealInput;
+    private JTextField fatMealInput;
+
+    //FRAMES
+    private JFrame trackerFrame;
+    private JFrame saveFrame;
+    private JFrame mealTrackerFrame;
+
+    //PANELS
+    private JPanel savePanel;
+    private JPanel mealTrackerPanel;
+
+    private String daySelected;
 
     public GUI() {
         super("Tracker Application");
         this.setSize(400, 800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.PINK);
+        this.setBackground(Color.CYAN);
         this.setVisible(true);
 
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -77,15 +100,69 @@ public class GUI extends JFrame implements ActionListener {
 
     public void runTracker() {
         trackerFrame = new JFrame("Tracker");
-        trackerFrame.setSize(400, 400);
+        trackerFrame.setSize(400, 500);
         trackerFrame.setBackground(Color.WHITE);
-        trackerFrame.setVisible(true);
 
         trackerPanel = new JPanel();
         trackerFrame.add(trackerPanel);
-        trackerPanel.setVisible(true);
-
+        trackerFrame.setVisible(true);
+        trackerFrame.setResizable(false);
         selectNameAndWeek();
+
+        trackerFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        trackerFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                promptSave();
+            }
+        });
+    }
+
+    private void promptSave() {
+        constructSaver();
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveWeeklySummary();
+                saveFrame.dispose();
+                trackerFrame.dispose();
+            }
+        });
+        JButton dontSaveButton = new JButton("Don't save");
+        dontSaveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveFrame.dispose();
+                trackerFrame.dispose();
+            }
+        });
+        savePanel.add(saveButton);
+        savePanel.add(dontSaveButton);
+        saveFrame.add(savePanel);
+        saveFrame.setVisible(true);
+    }
+
+    private void constructSaver() {
+        saveFrame = new JFrame("Do you want to save?");
+        saveFrame.setSize(200,100);
+        saveFrame.setResizable(false);
+        savePanel = new JPanel();
+    }
+
+    private void saveWeeklySummary() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(weeklysummary);
+            jsonWriter.close();
+            JLabel saveSuccess = new JLabel("Saved " + weeklysummary.getName() + " to " + JSON_STORE);
+            savePanel.add(saveSuccess);
+            saveFrame.setVisible(true);
+        } catch (FileNotFoundException e) {
+            JLabel saveFail = new JLabel("Unable to write to file: " + JSON_STORE);
+            savePanel.add(saveFail);
+            saveFrame.setVisible(true);
+        }
     }
 
     public void selectNameAndWeek() {
@@ -96,15 +173,26 @@ public class GUI extends JFrame implements ActionListener {
         weekName.setColumns(10);
         trackerPanel.add(weekName);
 
-        JButton enterButton = new JButton("Enter");
-        enterButton.setActionCommand("enterButton");
-        enterButton.addActionListener(this);
+        enterButton = new JButton("Enter");
+        enterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectDayOfWeek();
+            }
+        });
         trackerPanel.add(enterButton);
+
         trackerPanel.setVisible(true);
+        trackerFrame.setVisible(true);
     }
 
     private void selectDayOfWeek() {
-        weeklysummary = new WeeklySummary(weekName.getText());
+        String weekNameString = weekName.getText();
+        welcomeLabel.setText("Name & Week: " + weekNameString);
+        weekName.setVisible(false);
+        enterButton.setVisible(false);
+
+        weeklysummary = new WeeklySummary(weekNameString);
         daysOfWeek = new JLabel("Type in day of week (e.g. Mon for Monday)");
         trackerPanel.add(daysOfWeek);
 
@@ -112,9 +200,16 @@ public class GUI extends JFrame implements ActionListener {
         weekDayName.setColumns(5);
         trackerPanel.add(weekDayName);
 
-        JButton enterButton2 = new JButton("Enter2");
-        enterButton2.setActionCommand("enterButton2");
-        enterButton2.addActionListener(this);
+        enterButton2 = new JButton("Enter");
+        enterButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectDay();
+                selectDayString();
+                daysOfWeek.setText("Day of Week: " + daySelected);
+                promptInputGoals();
+            }
+        });
         trackerPanel.add(enterButton2);
 
         trackerPanel.setVisible(true);
@@ -145,35 +240,64 @@ public class GUI extends JFrame implements ActionListener {
                 selected = weeklysummary.getDailyMacro(6);
                 break;
         }
-        JLabel daySelected = new JLabel("Day Selected!");
-        trackerPanel.add(daySelected);
+    }
+
+    public void selectDayString() {
+        switch (weekDayName.getText().toLowerCase()) {
+            case "mon":
+                daySelected = "Monday";
+                break;
+            case "tue":
+                daySelected = "Tuesday";
+                break;
+            case "wed":
+                daySelected = "Wednesday";
+                break;
+            case "thu":
+                daySelected = "Thursday";
+                break;
+            case "fri":
+                daySelected = "Friday";
+                break;
+            case "sat":
+                daySelected = "Saturday";
+                break;
+            case "sun":
+                daySelected = "Sunday";
+                break;
+        }
     }
 
     private void promptInputGoals() {
+        enterButton2.setVisible(false);
+        weekDayName.setVisible(false);
         inputCalorieGoals();
-        inputMacrosGoals();
     }
 
-    public void inputCalorieGoals() {
-        JLabel calorieGoalPrompt = new JLabel("<html>Enter daily calorie goal<br></html>");
-        trackerPanel.add(calorieGoalPrompt);
+    private void inputCalorieGoals() {
+        calorieGoalInput = new JLabel("Enter daily calorie goal");
+        trackerPanel.add(calorieGoalInput);
 
         calorieGoal = new JTextField();
         calorieGoal.setColumns(5);
 
         trackerPanel.add(calorieGoal);
         trackerFrame.add(trackerPanel);
-        trackerPanel.setVisible(true);
-        trackerFrame.setVisible(true);
 
-        JButton enterButton3 = new JButton("Enter3");
-        enterButton3.setActionCommand("enterButton3");
-        enterButton3.addActionListener(this);
+        enterButton3 = new JButton("Enter");
+        enterButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setCalorieGoals();
+            }
+        });
         trackerPanel.add(enterButton3);
+        trackerFrame.setVisible(true);
     }
 
     public void setCalorieGoals() {
         String calorieGoalText = calorieGoal.getText();
+        calorieGoalInput.setText("Daily Calorie Goal: " + calorieGoalText);
         int calorieGoalInt = Integer.parseInt(calorieGoalText);
 
         if (calorieGoalInt > 0) {
@@ -184,75 +308,202 @@ public class GUI extends JFrame implements ActionListener {
             inputCalorieGoals();
         }
         trackerFrame.setVisible(true);
+        inputMacrosGoals();
     }
 
-    //MODIFIES: this
-    //EFFECTS: sets macros goals for selected day
-    public void inputMacrosGoals() {
-        JLabel carbsGoalInput = new JLabel("Enter target carbs goal as % (e.g. 0.4 for 40%)\n");
-        JTextField carbsGoal = new JTextField();
-        carbsGoal.setColumns(5);
+    private void inputMacrosGoals() {
+        enterButton3.setVisible(false);
+        calorieGoal.setVisible(false);
+        carbsGoalInput = new JLabel("Enter target carbs goal as % (e.g. 0.4 for 40%)\n");
+        carbsGoal = new JTextField(5);
         trackerPanel.add(carbsGoalInput);
         trackerPanel.add(carbsGoal);
 
-        //double carbsAmount = input.nextDouble();
-
-        JLabel proteinGoalInput = new JLabel("Enter target protein goal as % (e.g. 0.3 for 30%)\n");
-        JTextField proteinGoal = new JTextField();
-        carbsGoal.setColumns(5);
+        proteinGoalInput = new JLabel("Enter target protein goal as % (e.g. 0.3 for 30%)\n");
+        proteinGoal = new JTextField(5);
         trackerPanel.add(proteinGoalInput);
         trackerPanel.add(proteinGoal);
 
-      //  double proteinAmount = input.nextDouble();
-
-        JLabel fatGoalInput = new JLabel("Enter target fat goal as % (e.g. 0.3 for 30%)\n");
-        JTextField fatGoal = new JTextField();
-        carbsGoal.setColumns(5);
+        fatGoalInput = new JLabel("Enter target fat goal as % (e.g. 0.3 for 30%)\n");
+        fatGoal = new JTextField(5);
         trackerPanel.add(fatGoalInput);
         trackerPanel.add(fatGoal);
-        double fatAmount = input.nextDouble();
 
-    //    double totalAmount = carbsAmount + proteinAmount + fatAmount;
-//
-//        if (totalAmount != 1.0) {
-//            System.out.println("Enter three percentages that add up to 100%");
-//        } else {
-//            selected.setCarbsGoalsPercentage(carbsAmount);
-//            selected.setProteinGoalsPercentage(proteinAmount);
-//            selected.setFatGoalsPercentage(fatAmount);
-//            selected.calculateMacroGoals();
-//            JLabel macroBreakdown = new JLabel("Your target macro breakdown in grams are:");
-//            JLabel carbBreakdown = new JLabel("Carbs:" + " " + selected.getCarbsGoalGrams());
-//            JLabel proteinBreakdown = new JLabel("Protein:" + " " + selected.getProteinGoalGrams());
-//            JLabel fatBreakdown = new JLabel("Fat:" + " " + selected.getFatGoalGrams());
-//            trackerPanel.add(macroBreakdown);
-//            trackerPanel.add(carbBreakdown);
-//            trackerPanel.add(proteinBreakdown);
-//            trackerPanel.add(fatBreakdown);
-//        }
+        enterButton4 = new JButton("Enter");
+        enterButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setMacroGoals();
+            }
+        });
+        trackerPanel.add(enterButton4);
+    }
+
+    private void setMacroGoals() {
+        String carbsGoalString = carbsGoal.getText();
+        String proteinGoalString = proteinGoal.getText();
+        String fatGoalString = fatGoal.getText();
+
+        carbsGoal.setVisible(false);
+        proteinGoal.setVisible(false);
+        fatGoal.setVisible(false);
+
+        double carbsAmount = Double.parseDouble(carbsGoalString);
+        double proteinAmount = Double.parseDouble(proteinGoalString);
+        double fatAmount = Double.parseDouble(fatGoalString);
+
+        carbsGoalInput.setText("% Carbs Goal: " + (carbsAmount * 100) + " %");
+        proteinGoalInput.setText("% Protein Goal: " + (proteinAmount * 100) + " %");
+        fatGoalInput.setText("% Fat Goal: " + (fatAmount * 100) + " %");
+
+        double totalAmount = carbsAmount + proteinAmount + fatAmount;
+        if (totalAmount != 1.0) {
+            JLabel mustaddUpTo = new JLabel("Enter three percentages that add up to 100%");
+            trackerPanel.add(mustaddUpTo);
+            mustaddUpTo.setVisible(true);
+        } else {
+            displayMacroBreakdown(carbsAmount, proteinAmount, fatAmount);
+        }
+    }
+
+    private void displayMacroBreakdown(double carbsAmount, double proteinAmount, double fatAmount) {
+        enterButton4.setVisible(false);
+        selected.setCarbsGoalsPercentage(carbsAmount);
+        selected.setProteinGoalsPercentage(proteinAmount);
+        selected.setFatGoalsPercentage(fatAmount);
+        selected.calculateMacroGoals();
+        JLabel macroBreakdown = new JLabel("Your target macro breakdown in grams are:");
+        JLabel carbBreakdown = new JLabel("Carbs:" + " " + selected.getCarbsGoalGrams() + " (g)");
+        JLabel proteinBreakdown = new JLabel("Protein:" + " " + selected.getProteinGoalGrams() + " (g)");
+        JLabel fatBreakdown = new JLabel("Fat:" + " " + selected.getFatGoalGrams() + " (g)");
+        trackerPanel.add(macroBreakdown);
+        trackerPanel.add(carbBreakdown);
+        trackerPanel.add(proteinBreakdown);
+        trackerPanel.add(fatBreakdown);
+        trackerPanel.setVisible(true);
+        trackerFrame.setVisible(true);
+        continueTracking();
+    }
+
+    private void continueTracking() {
+        inputMeal = new JButton("Input Meal");
+        inputMeal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inputMealPrompt();
+            }
+        });
+
+        viewSummary = new JButton("View Summary");
+        viewSummary.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewSummary();
+            }
+        });
+
+        trackerPanel.add(inputMeal);
+        trackerPanel.add(viewSummary);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: adds grams of macronutrients consumed to respective categories
+    public void inputMealPrompt() {
+        constructTracker();
+
+        enterCarbs = new JLabel("Enter grams of carbs consumed\n");
+        enterProtein = new JLabel("Enter grams of protein consumed\n");
+        enterFat = new JLabel("Enter grams of fat consumed\n");
+
+        carbsMealInput = new JTextField(3);
+        proteinMealInput = new JTextField(3);
+        fatMealInput = new JTextField(3);
+
+        enterButton5 = new JButton("Enter");
+        enterButton5.setActionCommand("enterbutton5");
+        enterButton5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inputMeal();
+            }
+        });
+
+        mealTrackerPanel.add(enterCarbs);
+        mealTrackerPanel.add(carbsMealInput);
+        mealTrackerPanel.add(enterProtein);
+        mealTrackerPanel.add(proteinMealInput);
+        mealTrackerPanel.add(enterFat);
+        mealTrackerPanel.add(fatMealInput);
+        mealTrackerPanel.add(enterButton5);
+        mealTrackerFrame.setVisible(true);
+    }
+
+    private void constructTracker() {
+        mealTrackerFrame = new JFrame();
+        mealTrackerFrame.setSize(300,200);
+        mealTrackerFrame.setResizable(false);
+
+        mealTrackerPanel = new JPanel();
+        mealTrackerFrame.add(mealTrackerPanel);
+    }
+
+    private void inputMeal() {
+        enterButton5.setVisible(false);
+        carbsMealInput.setVisible(false);
+        proteinMealInput.setVisible(false);
+        fatMealInput.setVisible(false);
+
+        String carbsAmountMeal = carbsMealInput.getText();
+        String proteinAmountMeal = proteinMealInput.getText();
+        String fatAmountMeal =  fatMealInput.getText();
+
+        selected.addCarbsConsumed(Integer.parseInt(carbsAmountMeal));
+        selected.addProteinConsumed(Integer.parseInt(proteinAmountMeal));
+        selected.addFatConsumed(Integer.parseInt(fatAmountMeal));
+
+        enterCarbs.setText("Carbs consumed: " + carbsAmountMeal + " (g)");
+        enterProtein.setText("Protein consumed: " + proteinAmountMeal + " (g)");
+        enterFat.setText("Fat consumed: " + fatAmountMeal + " (g)");
+    }
+
+    //EFFECTS: prints summary of daily intake and goals
+    private void viewSummary() {
+        int difference = selected.compareCalorieGoals();
+        JLabel calGoal = new JLabel("Your total calorie goal was:" + " " + selected.getCalorieGoal());
+        JLabel calConsumed = new JLabel("Calories consumed today was:" + " " + selected.getTotalCaloriesConsumed());
+        JLabel metGoalorNot = new JLabel("");
+        if (selected.compareCalorieGoals() == 0) {
+            metGoalorNot.setText("You met your calorie goal!");
+        } else if (selected.compareCalorieGoals() > 0) {
+            metGoalorNot.setText("You were over your calorie goal by" + " " + difference);
+        } else if (selected.compareCalorieGoals() < 0) {
+            metGoalorNot.setText("You were under your calorie goal by" + " " + -difference);
+        }
+        trackerPanel.add(calGoal);
+        trackerPanel.add(calConsumed);
+        trackerPanel.add(metGoalorNot);
+        trackerFrame.setVisible(true);
     }
 
     private void loadWeeklySummary() {
+        this.add(loadLabel);
         try {
             weeklysummary = jsonReader.read();
-            loadLabel =  new JLabel("<html>Loaded "
-                    + weeklysummary.getName() + " from " + JSON_STORE + "</br></html>");
+            loadLabel.setText("Loaded " + weeklysummary.getName() + " from " + JSON_STORE);
         } catch (IOException e) {
             JLabel exceptionLabel = new JLabel("Unable to read from file: " + JSON_STORE);
             this.add(exceptionLabel);
         }
-        this.add(loadLabel);
         setVisible(true);
     }
 
     private void printWeeklySummary() {
-        printLabel = new JLabel("<html>Here is the weekly summary from Monday to Sunday:<br/></html>");
+        printLabel.setText("Here is the weekly summary from Monday to Sunday:");
         this.add(printLabel);
         List<DailyMacros> dailyMacros = weeklysummary.getWeeklySummaryList();
-
-        for (DailyMacros dm: dailyMacros) {
-            JLabel dayOfWeekLabel = new JLabel(dm.formatNicely());
-            this.add(dayOfWeekLabel);
+        this.add(weeklySummary);
+        for (DailyMacros dm : dailyMacros) {
+            weeklySummary.setText(weeklySummary.getText() + dm.formatNicely());
         }
         setVisible(true);
     }
@@ -268,21 +519,6 @@ public class GUI extends JFrame implements ActionListener {
             case "printButton":
                 printWeeklySummary();
                 break;
-            case "enterButton":
-                selectDayOfWeek();
-                break;
-            case "enterButton2":
-                selectDay();
-                promptInputGoals();
-                break;
-            case "enterButton3":
-                setCalorieGoals();
-                break;
-            default:
-                printWeeklySummary();
-                break;
         }
     }
-
 }
-
