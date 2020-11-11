@@ -1,14 +1,14 @@
 {
     "weekly record": [
         {
-            "calorie goal": 0,
-            "calories consumed": 0,
-            "protein goal (g)": 0,
-            "carbs goal (g)": 0,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 0,
-            "fat consumed (g)": 0,
-            "carbs consumed (g)": 0
+            "calorie goal": 20,
+            "calories consumed": 25,
+            "protein goal (g)": 2,
+            "carbs goal (g)": 2,
+            "fat goal (g)": 1,
+            "protein consumed (g)": 2,
+            "fat consumed (g)": 1,
+            "carbs consumed (g)": 2
         },
         {
             "calorie goal": 0,
@@ -71,5 +71,5 @@
             "carbs consumed (g)": 0
         }
     ],
-    "name & week": ""
+    "name & week": "Stella"
 }

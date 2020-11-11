@@ -17,8 +17,6 @@ public class GUI extends JFrame implements ActionListener {
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
-    private Container container = new Container();
-
     private final Color blue = new Color(223, 247, 252);
     private final Color lilac = new Color(230, 229, 255);
     private final Color coral = new Color(246, 226, 207);
@@ -60,7 +58,6 @@ public class GUI extends JFrame implements ActionListener {
     private JFrame saveFrame;
     private JFrame mealTrackerFrame;
 
-    private JPanel mainPanel;
     private JPanel savePanel;
     private JPanel mealTrackerPanel;
 
@@ -84,7 +81,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void constructMainPanel() {
-        mainPanel = new JPanel();
+        JPanel mainPanel = new JPanel();
 
         JButton trackButton = new JButton("Track");
         trackButton.setActionCommand("trackButton");
@@ -114,6 +111,8 @@ public class GUI extends JFrame implements ActionListener {
 
         trackerPanel = new JPanel();
         trackerPanel.setBackground(lilac);
+        trackerPanel.setLayout(new BoxLayout(trackerPanel, BoxLayout.Y_AXIS));
+
         trackerFrame.add(trackerPanel);
         trackerFrame.setVisible(true);
         trackerFrame.setResizable(false);
@@ -173,9 +172,9 @@ public class GUI extends JFrame implements ActionListener {
     public void selectNameAndWeek() {
         welcomeLabel = new JLabel("Please enter your name and week (e.g. Stella Week 1)");
         trackerPanel.add(welcomeLabel);
-
+        trackerPanel.add(Box.createVerticalStrut(10));
         weekName = new JTextField(1);
-        weekName.setColumns(10);
+        weekName.setMaximumSize(new Dimension(200,25));
         trackerPanel.add(weekName);
 
         enterButton = new JButton("Enter");
@@ -195,9 +194,9 @@ public class GUI extends JFrame implements ActionListener {
         weeklysummary = new WeeklySummary(weekNameString);
         daysOfWeek = new JLabel("Type in day of week (e.g. Mon for Monday)");
         trackerPanel.add(daysOfWeek);
-
-        weekDayName = new JTextField(1);
-        weekDayName.setColumns(5);
+        trackerPanel.add(Box.createVerticalStrut(10));
+        weekDayName = new JTextField(2);
+        weekDayName.setMaximumSize(new Dimension(200,25));
         trackerPanel.add(weekDayName);
 
         enterButton2 = new JButton("Enter");
@@ -275,8 +274,9 @@ public class GUI extends JFrame implements ActionListener {
         calorieGoalInput = new JLabel("Enter daily calorie goal");
         trackerPanel.add(calorieGoalInput);
 
-        calorieGoal = new JTextField();
-        calorieGoal.setColumns(5);
+        trackerPanel.add(Box.createVerticalStrut(10));
+        calorieGoal = new JTextField(2);
+        calorieGoal.setMaximumSize(new Dimension(200,25));
 
         trackerPanel.add(calorieGoal);
         trackerFrame.add(trackerPanel);
@@ -306,18 +306,25 @@ public class GUI extends JFrame implements ActionListener {
     private void inputMacrosGoals() {
         enterButton3.setVisible(false);
         calorieGoal.setVisible(false);
+
         carbsGoalInput = new JLabel("Enter target carbs goal as % (e.g. 0.4 for 40%)\n");
-        carbsGoal = new JTextField(5);
+        trackerPanel.add(Box.createVerticalStrut(10));
+        carbsGoal = new JTextField();
+        carbsGoal.setMaximumSize(new Dimension(200,25));
         trackerPanel.add(carbsGoalInput);
         trackerPanel.add(carbsGoal);
 
         proteinGoalInput = new JLabel("Enter target protein goal as % (e.g. 0.3 for 30%)\n");
-        proteinGoal = new JTextField(5);
+        trackerPanel.add(Box.createVerticalStrut(10));
+        proteinGoal = new JTextField(2);
+        proteinGoal.setMaximumSize(new Dimension(200,25));
         trackerPanel.add(proteinGoalInput);
         trackerPanel.add(proteinGoal);
 
         fatGoalInput = new JLabel("Enter target fat goal as % (e.g. 0.3 for 30%)\n");
-        fatGoal = new JTextField(5);
+        trackerPanel.add(Box.createVerticalStrut(10));
+        fatGoal = new JTextField(2);
+        fatGoal.setMaximumSize(new Dimension(200,25));
         trackerPanel.add(fatGoalInput);
         trackerPanel.add(fatGoal);
 
@@ -348,6 +355,7 @@ public class GUI extends JFrame implements ActionListener {
             JLabel mustAddUpTo = new JLabel("Enter three percentages that add up to 100%");
             trackerPanel.add(mustAddUpTo);
             mustAddUpTo.setVisible(true);
+            inputMacrosGoals();
         } else {
             displayMacroBreakdown(carbsAmount, proteinAmount, fatAmount);
         }
@@ -363,9 +371,13 @@ public class GUI extends JFrame implements ActionListener {
         JLabel carbBreakdown = new JLabel("Carbs:" + " " + selected.getCarbsGoalGrams() + " (g)");
         JLabel proteinBreakdown = new JLabel("Protein:" + " " + selected.getProteinGoalGrams() + " (g)");
         JLabel fatBreakdown = new JLabel("Fat:" + " " + selected.getFatGoalGrams() + " (g)");
+        trackerPanel.add(Box.createVerticalStrut(20));
         trackerPanel.add(macroBreakdown);
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(carbBreakdown);
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(proteinBreakdown);
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(fatBreakdown);
         trackerPanel.setVisible(true);
         trackerFrame.setVisible(true);
@@ -379,6 +391,7 @@ public class GUI extends JFrame implements ActionListener {
         JButton viewSummary = new JButton("View Summary");
         viewSummary.addActionListener(e -> viewSummary());
 
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(inputMeal);
         trackerPanel.add(viewSummary);
     }
@@ -392,9 +405,9 @@ public class GUI extends JFrame implements ActionListener {
         enterProtein = new JLabel("Enter grams of protein consumed\n");
         enterFat = new JLabel("Enter grams of fat consumed\n");
 
-        carbsMealInput = new JTextField(3);
-        proteinMealInput = new JTextField(3);
-        fatMealInput = new JTextField(3);
+        carbsMealInput = new JTextField(2);
+        proteinMealInput = new JTextField(2);
+        fatMealInput = new JTextField(2);
 
         enterButton5 = new JButton("Enter");
         enterButton5.addActionListener(e -> inputMeal());
@@ -451,8 +464,11 @@ public class GUI extends JFrame implements ActionListener {
         } else if (selected.compareCalorieGoals() < 0) {
             metGoalOrNot.setText("You were under your calorie goal by" + " " + -difference);
         }
+        trackerPanel.add(Box.createVerticalStrut(30));
         trackerPanel.add(calGoal);
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(calConsumed);
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(metGoalOrNot);
         trackerFrame.setVisible(true);
     }
