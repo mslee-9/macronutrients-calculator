@@ -211,6 +211,7 @@ public class TrackerApp {
         }
     }
 
+    //EFFECTS: saves weekly summary data
     private void saveWeeklySummary() {
         try {
             jsonWriter.open();

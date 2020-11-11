@@ -10,8 +10,17 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import javax.sound.sampled.*;
 
+//SOURCES (This class was built using demo's in the websites below):
+//     Stack OverFlow: https://stackoverflow.com/questions/6578205/swing-jlabel-text-change-on-the-running-application
+//     Oracle Java Documentation: https://docs.oracle.com/javase/tutorial/uiswing/events/intro.html
+//                                https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
+//                                https://docs.oracle.com/javase/tutorial/uiswing/layout/box.html
+//     CPSC 210 Resources: SpaceInvaders, RobustTrafficLights, and DrawingPlayer
+//Graphical User Interface (GUI) for Calories & macros tracking application
 public class GUI extends JFrame implements ActionListener {
     private static final String JSON_STORE = "./data/weeklySummary.json";
     private JsonWriter jsonWriter;
@@ -33,9 +42,10 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel fatGoalInput;
     private JLabel carbsGoalInput;
     private JLabel proteinGoalInput;
-    private JLabel enterCarbs;
-    private JLabel enterProtein;
-    private JLabel enterFat;
+    private JLabel enterCarbs = new JLabel();
+    private JLabel enterProtein = new JLabel();
+    private JLabel enterFat = new JLabel();
+    private JLabel invalidMeal = new JLabel("Enter integer number for each macro!");
     private JLabel dayOfWeekLabel = new JLabel();
 
     private JButton enterButton;
@@ -62,7 +72,11 @@ public class GUI extends JFrame implements ActionListener {
     private JPanel mealTrackerPanel;
 
     private String daySelected;
+    String carbsGoalString;
+    String proteinGoalString;
+    String fatGoalString;
 
+    //EFFECTS: constructs GUI class and calls method to construct main panel
     public GUI() {
         super("Tracker Application");
         this.setSize(400, 800);
@@ -80,6 +94,8 @@ public class GUI extends JFrame implements ActionListener {
         constructMainPanel();
     }
 
+    //EFFECTS: constructs main panel with three buttons, "Track", "Load Data", and "Print Data"
+    //         and adds the buttons to the main action listener
     private void constructMainPanel() {
         JPanel mainPanel = new JPanel();
 
@@ -100,10 +116,13 @@ public class GUI extends JFrame implements ActionListener {
         mainPanel.add(printButton);
 
         add(mainPanel);
-        mainPanel.setSize(400,800);
+        mainPanel.setSize(400, 800);
         setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: constructs tracker frame and panel, prompts user to select name and week for the week, and
+    //         when prompted to close, calls promptSave method
     private void runTracker() {
         trackerFrame = new JFrame("Tracker");
         trackerFrame.setSize(400, 500);
@@ -127,6 +146,10 @@ public class GUI extends JFrame implements ActionListener {
         });
     }
 
+    //MODIFIES: this
+    //EFFECTS: Calls method that construct saver frame and panel, displays two buttons "Save" and "Don't Save"
+    //         If user selects "Save", save data entered so far, exit tracker
+    //         If user selects "Don't save", exit tracker without saving
     private void promptSave() {
         constructSaver();
         JButton saveButton = new JButton("Save");
@@ -146,6 +169,8 @@ public class GUI extends JFrame implements ActionListener {
         saveFrame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: make a new frame and panel that goes in it for the saver
     private void constructSaver() {
         saveFrame = new JFrame("Do you want to save?");
         saveFrame.setSize(400, 100);
@@ -154,6 +179,9 @@ public class GUI extends JFrame implements ActionListener {
         savePanel.setBackground(coral);
     }
 
+    //MODIFIES: this
+    //EFFECTS: saves weekly summary data to a JSON file
+    //         If file cannot be found, throw FileNotFoundException
     private void saveWeeklySummary() {
         try {
             jsonWriter.open();
@@ -169,41 +197,62 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Prompts user to enter name and week
+    //         when "Enter" button is pressed, call processSelectDayOfWeek and selectDayOfWeek method
     public void selectNameAndWeek() {
         welcomeLabel = new JLabel("Please enter your name and week (e.g. Stella Week 1)");
+
         trackerPanel.add(welcomeLabel);
         trackerPanel.add(Box.createVerticalStrut(10));
+
         weekName = new JTextField(1);
-        weekName.setMaximumSize(new Dimension(200,25));
+        weekName.setMaximumSize(new Dimension(200, 25));
         trackerPanel.add(weekName);
 
         enterButton = new JButton("Enter");
-        enterButton.addActionListener(e -> selectDayOfWeek());
+        enterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processSelectDayOfWeek();
+                selectDayOfWeek();
+            }
+        });
         trackerPanel.add(enterButton);
 
         trackerPanel.setVisible(true);
         trackerFrame.setVisible(true);
     }
 
-    private void selectDayOfWeek() {
+    //MODIFIES: this
+    //EFFECTS: gets user input in String, displays selected name and week,
+    //         constructs new weeklySummary instance with chosen name
+    //         makes previous input fields and buttons invisible
+    private void processSelectDayOfWeek() {
         String weekNameString = weekName.getText();
         welcomeLabel.setText("Name & Week: " + weekNameString);
-        weekName.setVisible(false);
-        enterButton.setVisible(false);
 
         weeklysummary = new WeeklySummary(weekNameString);
+
+        weekName.setVisible(false);
+        enterButton.setVisible(false);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: Prompts user to choose a day of week, calls processSelectDay,
+    //         and calls promptInputGoals to continue execution
+    private void selectDayOfWeek() {
         daysOfWeek = new JLabel("Type in day of week (e.g. Mon for Monday)");
         trackerPanel.add(daysOfWeek);
         trackerPanel.add(Box.createVerticalStrut(10));
+
         weekDayName = new JTextField(2);
-        weekDayName.setMaximumSize(new Dimension(200,25));
+        weekDayName.setMaximumSize(new Dimension(200, 25));
         trackerPanel.add(weekDayName);
 
         enterButton2 = new JButton("Enter");
         enterButton2.addActionListener(e -> {
-            selectDay();
-            selectDayString();
-            daysOfWeek.setText("Day of Week: " + daySelected);
+            processSelectDay();
             promptInputGoals();
         });
         trackerPanel.add(enterButton2);
@@ -212,6 +261,18 @@ public class GUI extends JFrame implements ActionListener {
         trackerFrame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: calls selectDay and selectDayString and displays the chosen day of week
+    private void processSelectDay() {
+        selectDay();
+        selectDayString();
+        daysOfWeek.setText("Day of Week: " + daySelected);
+    }
+
+
+    //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
+    //MODIFIES: this
+    //EFFECTS: selects day of the week, monday through sunday, in weekly summary corresponding to the index
     public void selectDay() {
         switch (weekDayName.getText().toLowerCase()) {
             case "mon":
@@ -238,6 +299,9 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
+    //MODIFIES: this
+    //EFFECTS: selects and updates daySelected field with chosen day  of the week, monday through sunday
     public void selectDayString() {
         switch (weekDayName.getText().toLowerCase()) {
             case "mon":
@@ -264,19 +328,24 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Calls method to input Calorie Goals to start prompting user's goal inputs
     private void promptInputGoals() {
         enterButton2.setVisible(false);
         weekDayName.setVisible(false);
         inputCalorieGoals();
     }
 
+    //MODIFIES: this
+    //EFFECTS: Prompts user to input calorie goals and when "Enter" button is clicked, call method to set calorie goals
     private void inputCalorieGoals() {
-        calorieGoalInput = new JLabel("Enter daily calorie goal");
+        calorieGoalInput = new JLabel("Enter daily calorie goal (kcal)");
+        trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(calorieGoalInput);
 
         trackerPanel.add(Box.createVerticalStrut(10));
         calorieGoal = new JTextField(2);
-        calorieGoal.setMaximumSize(new Dimension(200,25));
+        calorieGoal.setMaximumSize(new Dimension(200, 25));
 
         trackerPanel.add(calorieGoal);
         trackerFrame.add(trackerPanel);
@@ -287,44 +356,49 @@ public class GUI extends JFrame implements ActionListener {
         trackerFrame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Prompts user to input calorie goals and when "Enter" button is clicked, call method to set calorie goals
+    //         Once valid calorie goal was inputted, call method to prompt inputting of Macros goals
     public void setCalorieGoals() {
         String calorieGoalText = calorieGoal.getText();
-        calorieGoalInput.setText("Daily Calorie Goal: " + calorieGoalText);
+        calorieGoalInput.setText("Daily Calorie Goal: " + calorieGoalText + " kcal");
         int calorieGoalInt = Integer.parseInt(calorieGoalText);
 
         if (calorieGoalInt > 0) {
             selected.setCalorieGoal(calorieGoalInt);
+            inputMacrosGoals();
+
         } else {
-            JLabel calorieUnderZero = new JLabel(" Calorie goal must be greater than zero...");
+            calorieGoal.setVisible(false);
+            enterButton3.setVisible(false);
+            JLabel calorieUnderZero = new JLabel("Calorie goal must be greater than zero...");
             trackerPanel.add(calorieUnderZero);
             inputCalorieGoals();
         }
         trackerFrame.setVisible(true);
-        inputMacrosGoals();
     }
 
+    //MODIFIES: this
+    //EFFECTS: Prompts user to input Macros goals and calls setMacroGoals when "Enter" button is pressed
     private void inputMacrosGoals() {
-        enterButton3.setVisible(false);
-        calorieGoal.setVisible(false);
-
         carbsGoalInput = new JLabel("Enter target carbs goal as % (e.g. 0.4 for 40%)\n");
         trackerPanel.add(Box.createVerticalStrut(10));
         carbsGoal = new JTextField();
-        carbsGoal.setMaximumSize(new Dimension(200,25));
+        carbsGoal.setMaximumSize(new Dimension(200, 25));
         trackerPanel.add(carbsGoalInput);
         trackerPanel.add(carbsGoal);
 
         proteinGoalInput = new JLabel("Enter target protein goal as % (e.g. 0.3 for 30%)\n");
         trackerPanel.add(Box.createVerticalStrut(10));
         proteinGoal = new JTextField(2);
-        proteinGoal.setMaximumSize(new Dimension(200,25));
+        proteinGoal.setMaximumSize(new Dimension(200, 25));
         trackerPanel.add(proteinGoalInput);
         trackerPanel.add(proteinGoal);
 
         fatGoalInput = new JLabel("Enter target fat goal as % (e.g. 0.3 for 30%)\n");
         trackerPanel.add(Box.createVerticalStrut(10));
         fatGoal = new JTextField(2);
-        fatGoal.setMaximumSize(new Dimension(200,25));
+        fatGoal.setMaximumSize(new Dimension(200, 25));
         trackerPanel.add(fatGoalInput);
         trackerPanel.add(fatGoal);
 
@@ -333,10 +407,14 @@ public class GUI extends JFrame implements ActionListener {
         trackerPanel.add(enterButton4);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Reads User input for Macro goals, sets previous input fields invisible, displays
+    //         Percentage Macro goals
+    //         If invalid percentages were entered, prompts reader to enter again else call displayMacroBreakdown
     private void setMacroGoals() {
-        String carbsGoalString = carbsGoal.getText();
-        String proteinGoalString = proteinGoal.getText();
-        String fatGoalString = fatGoal.getText();
+        carbsGoalString = carbsGoal.getText();
+        proteinGoalString = proteinGoal.getText();
+        fatGoalString = fatGoal.getText();
 
         carbsGoal.setVisible(false);
         proteinGoal.setVisible(false);
@@ -361,16 +439,21 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Make previous input button invisible, calculate and display Macro breakdown for the day
+    //         call continueTracking method to continue execution
     private void displayMacroBreakdown(double carbsAmount, double proteinAmount, double fatAmount) {
         enterButton4.setVisible(false);
         selected.setCarbsGoalsPercentage(carbsAmount);
         selected.setProteinGoalsPercentage(proteinAmount);
         selected.setFatGoalsPercentage(fatAmount);
         selected.calculateMacroGoals();
+
         JLabel macroBreakdown = new JLabel("Your target macro breakdown in grams are:");
         JLabel carbBreakdown = new JLabel("Carbs:" + " " + selected.getCarbsGoalGrams() + " (g)");
         JLabel proteinBreakdown = new JLabel("Protein:" + " " + selected.getProteinGoalGrams() + " (g)");
         JLabel fatBreakdown = new JLabel("Fat:" + " " + selected.getFatGoalGrams() + " (g)");
+
         trackerPanel.add(Box.createVerticalStrut(20));
         trackerPanel.add(macroBreakdown);
         trackerPanel.add(Box.createVerticalStrut(10));
@@ -381,13 +464,21 @@ public class GUI extends JFrame implements ActionListener {
         trackerPanel.add(fatBreakdown);
         trackerPanel.setVisible(true);
         trackerFrame.setVisible(true);
+
         continueTracking();
     }
 
+    //MODIFIES: this
+    //EFFECTS: Display two new buttons "Input Meal" and "View Summary"
+    //         If user selects "Input Meal", call constructTracker then inputMealPrompt to continue execution
+    //         If user selects "View Summary", call viewSummary method
     private void continueTracking() {
         JButton inputMeal = new JButton("Input Meal");
-        inputMeal.addActionListener(e -> inputMealPrompt());
 
+        inputMeal.addActionListener(e -> {
+            constructTracker();
+            inputMealPrompt();
+        });
         JButton viewSummary = new JButton("View Summary");
         viewSummary.addActionListener(e -> viewSummary());
 
@@ -399,15 +490,13 @@ public class GUI extends JFrame implements ActionListener {
     //MODIFIES: this
     //EFFECTS: adds grams of macronutrients consumed to respective categories
     public void inputMealPrompt() {
-        constructTracker();
+        enterCarbs.setText("Enter grams of carbs consumed\n");
+        enterProtein.setText("Enter grams of protein consumed\n");
+        enterFat.setText("Enter grams of fat consumed\n");
 
-        enterCarbs = new JLabel("Enter grams of carbs consumed\n");
-        enterProtein = new JLabel("Enter grams of protein consumed\n");
-        enterFat = new JLabel("Enter grams of fat consumed\n");
-
-        carbsMealInput = new JTextField(2);
-        proteinMealInput = new JTextField(2);
-        fatMealInput = new JTextField(2);
+        carbsMealInput = new JTextField(3);
+        proteinMealInput = new JTextField(3);
+        fatMealInput = new JTextField(3);
 
         enterButton5 = new JButton("Enter");
         enterButton5.addActionListener(e -> inputMeal());
@@ -422,16 +511,22 @@ public class GUI extends JFrame implements ActionListener {
         mealTrackerFrame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: constructs tracker frame and panel that is added to the frame
     private void constructTracker() {
         mealTrackerFrame = new JFrame();
         mealTrackerFrame.setSize(300, 200);
-        mealTrackerFrame.setResizable(false);
+        mealTrackerFrame.setResizable(true);
 
         mealTrackerPanel = new JPanel();
         mealTrackerPanel.setBackground(blue);
         mealTrackerFrame.add(mealTrackerPanel);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Makes previous input buttons and fields invisible, reads user inputs and if they're valid,
+    //         output text showing user their input
+    //         If inputs are invalid, prompts user to re-enter by showing warning message
     private void inputMeal() {
         enterButton5.setVisible(false);
         carbsMealInput.setVisible(false);
@@ -442,21 +537,33 @@ public class GUI extends JFrame implements ActionListener {
         String proteinAmountMeal = proteinMealInput.getText();
         String fatAmountMeal = fatMealInput.getText();
 
-        selected.addCarbsConsumed(Integer.parseInt(carbsAmountMeal));
-        selected.addProteinConsumed(Integer.parseInt(proteinAmountMeal));
-        selected.addFatConsumed(Integer.parseInt(fatAmountMeal));
+        mealTrackerPanel.add(invalidMeal);
+        invalidMeal.setVisible(false);
 
-        enterCarbs.setText("Carbs consumed: " + carbsAmountMeal + " (g)");
-        enterProtein.setText("Protein consumed: " + proteinAmountMeal + " (g)");
-        enterFat.setText("Fat consumed: " + fatAmountMeal + " (g)");
+        if (!(carbsAmountMeal.equals("") || proteinAmountMeal.equals("") || fatAmountMeal.equals(""))) {
+            selected.addCarbsConsumed(Integer.parseInt(carbsAmountMeal));
+            selected.addProteinConsumed(Integer.parseInt(proteinAmountMeal));
+            selected.addFatConsumed(Integer.parseInt(fatAmountMeal));
+
+            enterCarbs.setText("Carbs consumed: " + carbsAmountMeal + " (g)");
+            enterProtein.setText("Protein consumed: " + proteinAmountMeal + " (g)");
+            enterFat.setText("Fat consumed: " + fatAmountMeal + " (g)");
+        } else {
+            invalidMeal.setVisible(true);
+            mealTrackerPanel.setVisible(true);
+            inputMealPrompt();
+        }
     }
 
+    //MODIFIES: this
     //EFFECTS: prints summary of daily intake and goals
     private void viewSummary() {
         int difference = selected.compareCalorieGoals();
         JLabel calGoal = new JLabel("Your total calorie goal was:" + " " + selected.getCalorieGoal());
-        JLabel calConsumed = new JLabel("Calories consumed today was:" + " " + selected.getTotalCaloriesConsumed());
+        JLabel calConsumed = new JLabel("Calories consumed today was:" + " "
+                + selected.getTotalCaloriesConsumed());
         JLabel metGoalOrNot = new JLabel("");
+
         if (selected.compareCalorieGoals() == 0) {
             metGoalOrNot.setText("You met your calorie goal!");
         } else if (selected.compareCalorieGoals() > 0) {
@@ -473,6 +580,8 @@ public class GUI extends JFrame implements ActionListener {
         trackerFrame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads weekly summary data from JSON file
     private void loadWeeklySummary() {
         this.add(loadLabel);
         try {
@@ -485,6 +594,8 @@ public class GUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: prints weekly summary data from Monday through Sunday
     private void printWeeklySummary() {
         this.add(printLabel);
         this.add(dayOfWeekLabel);
@@ -499,6 +610,7 @@ public class GUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    //EFFECTS: Get action command and perform appropriate task for buttons on the main panel
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "trackButton":
