@@ -8,9 +8,7 @@ import persistence.JsonWriter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
 import java.util.List;
 import javax.sound.sampled.*;
 
@@ -134,8 +132,9 @@ public class GUI extends JFrame implements ActionListener {
 
         trackerFrame.add(trackerPanel);
         trackerFrame.setVisible(true);
-        trackerFrame.setResizable(false);
+        trackerFrame.setResizable(true);
         selectNameAndWeek();
+        playStartSound();
 
         trackerFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         trackerFrame.addWindowListener(new WindowAdapter() {
@@ -151,6 +150,7 @@ public class GUI extends JFrame implements ActionListener {
     //         If user selects "Save", save data entered so far, exit tracker
     //         If user selects "Don't save", exit tracker without saving
     private void promptSave() {
+        playExitSound();
         constructSaver();
         JButton saveButton = new JButton("Save");
         saveButton.addActionListener(e -> {
@@ -211,12 +211,9 @@ public class GUI extends JFrame implements ActionListener {
         trackerPanel.add(weekName);
 
         enterButton = new JButton("Enter");
-        enterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                processSelectDayOfWeek();
-                selectDayOfWeek();
-            }
+        enterButton.addActionListener(e -> {
+            processSelectDayOfWeek();
+            selectDayOfWeek();
         });
         trackerPanel.add(enterButton);
 
@@ -578,6 +575,30 @@ public class GUI extends JFrame implements ActionListener {
         trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(metGoalOrNot);
         trackerFrame.setVisible(true);
+    }
+
+    private void playStartSound() {
+        File sound = new File("./data/enterChime.wav");
+        Clip c;
+        try {
+            c = AudioSystem.getClip();
+            c.open(AudioSystem.getAudioInputStream(sound));
+            c.start();
+        } catch (Exception e) {
+            System.out.println("no sound");
+        }
+    }
+
+    private void playExitSound() {
+        File sound = new File("./data/exitBeep.wav");
+        Clip c;
+        try {
+            c = AudioSystem.getClip();
+            c.open(AudioSystem.getAudioInputStream(sound));
+            c.start();
+        } catch (Exception e) {
+            System.out.println("no sound");
+        }
     }
 
     //MODIFIES: this

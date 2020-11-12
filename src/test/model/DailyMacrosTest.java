@@ -85,16 +85,14 @@ class DailyMacrosTest {
     @Test
     void testFormatNicely() {
         String formatted = testDailyMacros.formatNicely();
-        String s = "";
-        s += "\tCalorie Goal: " + testDailyMacros.getCalorieGoal()
-                + " | Calories consumed: " + testDailyMacros.getTotalCaloriesConsumed();
-        s += "\n\tCarbs Goal: " + testDailyMacros.getCarbsGoalGrams()
-                + "   | Carbs consumed: " + testDailyMacros.getCarbsConsumedGrams();
-        s += "\n\tProtein Goal: " + testDailyMacros.getProteinGoalGrams()
-                + " | Protein consumed: " + testDailyMacros.getProteinConsumedGrams();
-        s += "\n\tFat Goal: " + testDailyMacros.getFatGoalGrams()
-                + "     | Fat consumed: " + testDailyMacros.getFatConsumedGrams();
-        s += "\n";
+
+        String s = "<html>";
+        s += "<br/>" + "Calorie Goal: " + testDailyMacros.getCalorieGoal() + " | Calories consumed: " + testDailyMacros.getTotalCaloriesConsumed();
+        s += "<br/>Carbs Goal: " + testDailyMacros.getCarbsGoalGrams() + "   | Carbs consumed: " + testDailyMacros.getCarbsConsumedGrams();
+        s += "<br/>Protein Goal: " + testDailyMacros.getProteinGoalGrams() + " | Protein consumed: " + testDailyMacros.getProteinConsumedGrams();
+        s += "<br/>Fat Goal: " + testDailyMacros.getFatGoalGrams() + "     | Fat consumed: " + testDailyMacros.getFatConsumedGrams();
+        s += "<br/></html>";
+
         assertEquals(s, formatted);
     }
 }
