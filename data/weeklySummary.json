@@ -41,14 +41,14 @@
             "carbs consumed (g)": 0
         },
         {
-            "calorie goal": 20,
-            "calories consumed": 277,
-            "protein goal (g)": 1,
-            "carbs goal (g)": 3,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 16,
-            "fat consumed (g)": 17,
-            "carbs consumed (g)": 15
+            "calorie goal": 1400,
+            "calories consumed": 39,
+            "protein goal (g)": 70,
+            "carbs goal (g)": 210,
+            "fat goal (g)": 31,
+            "protein consumed (g)": 2,
+            "fat consumed (g)": 3,
+            "carbs consumed (g)": 1
         },
         {
             "calorie goal": 0,

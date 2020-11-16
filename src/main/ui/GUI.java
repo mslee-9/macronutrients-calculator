@@ -123,7 +123,7 @@ public class GUI extends JFrame implements ActionListener {
     //         when prompted to close, calls promptSave method
     private void runTracker() {
         trackerFrame = new JFrame("Tracker");
-        trackerFrame.setSize(400, 500);
+        trackerFrame.setSize(400, 600);
         trackerFrame.setBackground(Color.WHITE);
 
         trackerPanel = new JPanel();
@@ -578,27 +578,11 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void playStartSound() {
-        File sound = new File("./data/enterChime.wav");
-        Clip c;
-        try {
-            c = AudioSystem.getClip();
-            c.open(AudioSystem.getAudioInputStream(sound));
-            c.start();
-        } catch (Exception e) {
-            System.out.println("no sound");
-        }
+        SoundEffects.playStartSound();
     }
 
     private void playExitSound() {
-        File sound = new File("./data/exitBeep.wav");
-        Clip c;
-        try {
-            c = AudioSystem.getClip();
-            c.open(AudioSystem.getAudioInputStream(sound));
-            c.start();
-        } catch (Exception e) {
-            System.out.println("no sound");
-        }
+        SoundEffects.playExitSound();
     }
 
     //MODIFIES: this
