@@ -1,5 +1,6 @@
 package model;
 
+import model.Exceptions.InvalidAmountException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -55,26 +56,35 @@ public class DailyMacros implements Writable {
         return totalCaloriesConsumed - calorieGoals;
     }
 
-    //REQUIRES: grams >= 0
     //MODIFIES: this
     //EFFECTS: adds amount to total carbs amount consumed and adds to total calories consumed
-    public void addCarbsConsumed(int grams) {
+    //         throws InvalidAmountException if grams is less than 0
+    public void addCarbsConsumed(int grams) throws InvalidAmountException {
+        if (grams < 0) {
+            throw new InvalidAmountException();
+        }
         carbsConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramCarb;
     }
 
-    //REQUIRES: grams >= 0
     //MODIFIES: this
     //EFFECTS: adds amount to total protein amount consumed and adds to total calories consumed
-    public void addProteinConsumed(int grams) {
+    //         throws InvalidAmountException if grams is less than 0
+    public void addProteinConsumed(int grams) throws InvalidAmountException {
+        if (grams < 0) {
+            throw new InvalidAmountException();
+        }
         proteinConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramProtein;
     }
 
-    //REQUIRES: grams >= 0
     //MODIFIES: this
     //EFFECTS: adds amount to total fat amount consumed and adds to total calories consumed
-    public void addFatConsumed(int grams) {
+    //         throws InvalidAmountException if grams is less than 0
+    public void addFatConsumed(int grams) throws InvalidAmountException {
+        if (grams < 0) {
+            throw new InvalidAmountException();
+        }
         fatConsumed += grams;
         totalCaloriesConsumed += grams * calPerGramFat;
     }

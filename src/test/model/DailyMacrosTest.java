@@ -1,5 +1,7 @@
 package model;
 
+import model.Exceptions.InvalidAmountException;
+import model.Exceptions.InvalidWeekIndexException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,10 +31,14 @@ class DailyMacrosTest {
     }
 
     @Test
-    void testCompareCalorieGoals() {
-        testDailyMacros.addCarbsConsumed(250);
-        testDailyMacros.addProteinConsumed(140);
-        testDailyMacros.addFatConsumed(60);
+    void testCompareCalorieGoalsNoExceptionThrown() {
+        try {
+            testDailyMacros.addCarbsConsumed(250);
+            testDailyMacros.addProteinConsumed(140);
+            testDailyMacros.addFatConsumed(60);
+        } catch (InvalidAmountException e) {
+            fail();
+        }
 
         int consumed = testDailyMacros.getTotalCaloriesConsumed();
         int goal = testDailyMacros.getCalorieGoal();
@@ -41,45 +47,125 @@ class DailyMacrosTest {
     }
 
     @Test
-    void testAddCarbsConsumed() {
-        assertEquals(0, testDailyMacros.getCarbsConsumedGrams());
-
-        testDailyMacros.addCarbsConsumed(0);
-        assertEquals(0, testDailyMacros.getCarbsConsumedGrams());
-
-        testDailyMacros.addCarbsConsumed(2);
-        assertEquals(2, testDailyMacros.getCarbsConsumedGrams());
-
-        testDailyMacros.addCarbsConsumed(150);
-        assertEquals(152, testDailyMacros.getCarbsConsumedGrams());
+    void testCompareCalorieGoalsExceptionExpectedNegativeCarbs() {
+        try {
+            testDailyMacros.addCarbsConsumed(-1);
+            testDailyMacros.addProteinConsumed(140);
+            testDailyMacros.addFatConsumed(60);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
     }
 
     @Test
-    void testAddProteinConsumed() {
-        assertEquals(0, testDailyMacros.getProteinConsumedGrams());
-
-        testDailyMacros.addProteinConsumed(0);
-        assertEquals(0, testDailyMacros.getProteinConsumedGrams());
-
-        testDailyMacros.addProteinConsumed(2);
-        assertEquals(2, testDailyMacros.getProteinConsumedGrams());
-
-        testDailyMacros.addProteinConsumed(150);
-        assertEquals(152, testDailyMacros.getProteinConsumedGrams());
+    void testCompareCalorieGoalsExceptionExpectedNegativeProtein() {
+        try {
+            testDailyMacros.addCarbsConsumed(250);
+            testDailyMacros.addProteinConsumed(-1);
+            testDailyMacros.addFatConsumed(60);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
     }
 
     @Test
-    void testAddFatConsumed() {
-        assertEquals(0, testDailyMacros.getFatConsumedGrams());
+    void testCompareCalorieGoalsExceptionExpectedNegativeFat() {
+        try {
+            testDailyMacros.addCarbsConsumed(250);
+            testDailyMacros.addProteinConsumed(140);
+            testDailyMacros.addFatConsumed(-1);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
+    }
 
-        testDailyMacros.addFatConsumed(0);
-        assertEquals(0, testDailyMacros.getFatConsumedGrams());
 
-        testDailyMacros.addFatConsumed(2);
-        assertEquals(2, testDailyMacros.getFatConsumedGrams());
 
-        testDailyMacros.addFatConsumed(150);
-        assertEquals(152, testDailyMacros.getFatConsumedGrams());
+    @Test
+    void testAddCarbsConsumedNoException() {
+        try {
+            assertEquals(0, testDailyMacros.getCarbsConsumedGrams());
+
+            testDailyMacros.addCarbsConsumed(0);
+            assertEquals(0, testDailyMacros.getCarbsConsumedGrams());
+
+            testDailyMacros.addCarbsConsumed(2);
+            assertEquals(2, testDailyMacros.getCarbsConsumedGrams());
+
+            testDailyMacros.addCarbsConsumed(150);
+            assertEquals(152, testDailyMacros.getCarbsConsumedGrams());
+        } catch (InvalidAmountException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testAddCarbsConsumedInvalidAmountExceptionExpected() {
+        try {
+            assertEquals(0, testDailyMacros.getCarbsConsumedGrams());
+
+            testDailyMacros.addCarbsConsumed(-1);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
+    }
+
+    @Test
+    void testAddProteinConsumedNoException() {
+        try {
+            assertEquals(0, testDailyMacros.getProteinConsumedGrams());
+
+            testDailyMacros.addProteinConsumed(0);
+            assertEquals(0, testDailyMacros.getProteinConsumedGrams());
+
+            testDailyMacros.addProteinConsumed(2);
+            assertEquals(2, testDailyMacros.getProteinConsumedGrams());
+
+            testDailyMacros.addProteinConsumed(150);
+            assertEquals(152, testDailyMacros.getProteinConsumedGrams());
+        } catch (InvalidAmountException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testAddProteinConsumedInvalidAmountExceptionExpected() {
+        try {
+            assertEquals(0, testDailyMacros.getProteinConsumedGrams());
+
+            testDailyMacros.addProteinConsumed(-1);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
+    }
+
+    @Test
+    void testAddFatConsumedNoException() {
+        try {
+            assertEquals(0, testDailyMacros.getFatConsumedGrams());
+
+            testDailyMacros.addFatConsumed(0);
+            assertEquals(0, testDailyMacros.getFatConsumedGrams());
+
+            testDailyMacros.addFatConsumed(2);
+            assertEquals(2, testDailyMacros.getFatConsumedGrams());
+
+            testDailyMacros.addFatConsumed(150);
+            assertEquals(152, testDailyMacros.getFatConsumedGrams());
+        } catch (InvalidAmountException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testAddFatConsumedExpectInvalidAmountException() {
+        try {
+            assertEquals(0, testDailyMacros.getFatConsumedGrams());
+
+            testDailyMacros.addFatConsumed(-1);
+            fail();
+        } catch (InvalidAmountException e) {
+        }
     }
 
     @Test

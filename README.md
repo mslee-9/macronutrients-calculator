@@ -33,3 +33,9 @@ In the context of a calories & macronutrients tracker application:
 - As a user, I want to be able to save my daily records 
 - As a user, I want to be able to load and view printed weekly records from a file
 
+##Phase 4: Task 2
+For task 2 of phase 4, I chose to test and design classes that are robust. 
+- DailyMacros class has three methods addCarbsConsumed, addProteinConsumed, and addFatConsumed that throw 
+InvalidAmountException if the entered amount is less than zero. 
+- WeeklySummary class has getDailyMacro method that throws InvalidWeekIndex Exception
+if the index inputted is not between 0 and 6 inclusive. 

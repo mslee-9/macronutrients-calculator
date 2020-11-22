@@ -1,6 +1,8 @@
 package ui;
 
 import model.DailyMacros;
+import model.Exceptions.InvalidAmountException;
+import model.Exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -266,33 +268,36 @@ public class GUI extends JFrame implements ActionListener {
         daysOfWeek.setText("Day of Week: " + daySelected);
     }
 
-
     //REQUIRES: command must be one of mon, tue, wed, thu, fri, sat, or sun
     //MODIFIES: this
     //EFFECTS: selects day of the week, monday through sunday, in weekly summary corresponding to the index
     public void selectDay() {
-        switch (weekDayName.getText().toLowerCase()) {
-            case "mon":
-                selected = weeklysummary.getDailyMacro(0);
-                break;
-            case "tue":
-                selected = weeklysummary.getDailyMacro(1);
-                break;
-            case "wed":
-                selected = weeklysummary.getDailyMacro(2);
-                break;
-            case "thu":
-                selected = weeklysummary.getDailyMacro(3);
-                break;
-            case "fri":
-                selected = weeklysummary.getDailyMacro(4);
-                break;
-            case "sat":
-                selected = weeklysummary.getDailyMacro(5);
-                break;
-            case "sun":
-                selected = weeklysummary.getDailyMacro(6);
-                break;
+        try {
+            switch (weekDayName.getText().toLowerCase()) {
+                case "mon":
+                    selected = weeklysummary.getDailyMacro(0);
+                    break;
+                case "tue":
+                    selected = weeklysummary.getDailyMacro(1);
+                    break;
+                case "wed":
+                    selected = weeklysummary.getDailyMacro(2);
+                    break;
+                case "thu":
+                    selected = weeklysummary.getDailyMacro(3);
+                    break;
+                case "fri":
+                    selected = weeklysummary.getDailyMacro(4);
+                    break;
+                case "sat":
+                    selected = weeklysummary.getDailyMacro(5);
+                    break;
+                case "sun":
+                    selected = weeklysummary.getDailyMacro(6);
+                    break;
+            }
+        } catch (InvalidWeekIndexException e) {
+            System.out.println("Invalid Week Index: Index must be between 0 and 6 inclusive");
         }
     }
 
@@ -536,20 +541,27 @@ public class GUI extends JFrame implements ActionListener {
 
         mealTrackerPanel.add(invalidMeal);
         invalidMeal.setVisible(false);
+        try {
+            if (!(carbsAmountMeal.equals("") || proteinAmountMeal.equals("") || fatAmountMeal.equals(""))) {
+                selected.addCarbsConsumed(Integer.parseInt(carbsAmountMeal));
+                selected.addProteinConsumed(Integer.parseInt(proteinAmountMeal));
+                selected.addFatConsumed(Integer.parseInt(fatAmountMeal));
 
-        if (!(carbsAmountMeal.equals("") || proteinAmountMeal.equals("") || fatAmountMeal.equals(""))) {
-            selected.addCarbsConsumed(Integer.parseInt(carbsAmountMeal));
-            selected.addProteinConsumed(Integer.parseInt(proteinAmountMeal));
-            selected.addFatConsumed(Integer.parseInt(fatAmountMeal));
-
-            enterCarbs.setText("Carbs consumed: " + carbsAmountMeal + " (g)");
-            enterProtein.setText("Protein consumed: " + proteinAmountMeal + " (g)");
-            enterFat.setText("Fat consumed: " + fatAmountMeal + " (g)");
-        } else {
-            invalidMeal.setVisible(true);
-            mealTrackerPanel.setVisible(true);
-            inputMealPrompt();
+                setMealAmounts(carbsAmountMeal, proteinAmountMeal, fatAmountMeal);
+            } else {
+                invalidMeal.setVisible(true);
+                mealTrackerPanel.setVisible(true);
+                inputMealPrompt();
+            }
+        } catch (InvalidAmountException e) {
+            System.out.println("Amount must be greater than 0");
         }
+    }
+
+    private void setMealAmounts(String carbsAmountMeal, String proteinAmountMeal, String fatAmountMeal) {
+        enterCarbs.setText("Carbs consumed: " + carbsAmountMeal + " (g)");
+        enterProtein.setText("Protein consumed: " + proteinAmountMeal + " (g)");
+        enterFat.setText("Fat consumed: " + fatAmountMeal + " (g)");
     }
 
     //MODIFIES: this

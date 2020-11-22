@@ -1,6 +1,7 @@
 package persistence;
 
 import model.DailyMacros;
+import model.Exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,8 @@ class JsonReaderTest extends JsonTest {
             checkDailyMacros(2000, 200, 150, 50, ws.getDailyMacro(0));
         } catch (IOException e) {
             fail("Couldn't read from file");
+        } catch (InvalidWeekIndexException e) {
+            fail();
         }
     }
 

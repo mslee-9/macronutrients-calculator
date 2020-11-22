@@ -11,41 +11,11 @@
             "carbs consumed (g)": 0
         },
         {
-            "calorie goal": 0,
-            "calories consumed": 0,
-            "protein goal (g)": 0,
-            "carbs goal (g)": 0,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 0,
-            "fat consumed (g)": 0,
-            "carbs consumed (g)": 0
-        },
-        {
-            "calorie goal": 0,
-            "calories consumed": 0,
-            "protein goal (g)": 0,
-            "carbs goal (g)": 0,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 0,
-            "fat consumed (g)": 0,
-            "carbs consumed (g)": 0
-        },
-        {
-            "calorie goal": 0,
-            "calories consumed": 0,
-            "protein goal (g)": 0,
-            "carbs goal (g)": 0,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 0,
-            "fat consumed (g)": 0,
-            "carbs consumed (g)": 0
-        },
-        {
-            "calorie goal": 1400,
+            "calorie goal": 3,
             "calories consumed": 39,
-            "protein goal (g)": 70,
-            "carbs goal (g)": 210,
-            "fat goal (g)": 31,
+            "protein goal (g)": 0,
+            "carbs goal (g)": 0,
+            "fat goal (g)": 0,
             "protein consumed (g)": 2,
             "fat consumed (g)": 3,
             "carbs consumed (g)": 1
@@ -69,7 +39,37 @@
             "protein consumed (g)": 0,
             "fat consumed (g)": 0,
             "carbs consumed (g)": 0
+        },
+        {
+            "calorie goal": 0,
+            "calories consumed": 0,
+            "protein goal (g)": 0,
+            "carbs goal (g)": 0,
+            "fat goal (g)": 0,
+            "protein consumed (g)": 0,
+            "fat consumed (g)": 0,
+            "carbs consumed (g)": 0
+        },
+        {
+            "calorie goal": 0,
+            "calories consumed": 0,
+            "protein goal (g)": 0,
+            "carbs goal (g)": 0,
+            "fat goal (g)": 0,
+            "protein consumed (g)": 0,
+            "fat consumed (g)": 0,
+            "carbs consumed (g)": 0
+        },
+        {
+            "calorie goal": 0,
+            "calories consumed": 0,
+            "protein goal (g)": 0,
+            "carbs goal (g)": 0,
+            "fat goal (g)": 0,
+            "protein consumed (g)": 0,
+            "fat consumed (g)": 0,
+            "carbs consumed (g)": 0
         }
     ],
-    "name & week": "Stella"
+    "name & week": "s"
 }

@@ -2,6 +2,8 @@ package ui;
 
 
 import model.DailyMacros;
+import model.Exceptions.InvalidAmountException;
+import model.Exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -156,7 +158,7 @@ public class TrackerApp {
         System.out.println("Here is the weekly summary from Monday to Sunday:\n");
         List<DailyMacros> dailyMacros = weeklysummary.getWeeklySummaryList();
 
-        for (DailyMacros dm: dailyMacros) {
+        for (DailyMacros dm : dailyMacros) {
             System.out.println(dm.formatNicely());
         }
     }
@@ -165,30 +167,33 @@ public class TrackerApp {
     //MODIFIES: this
     //EFFECTS: selects day of the week, monday through sunday, in weekly summary
     public void selectDay(String command) {
-        switch (command) {
-            case "mon":
-                selected = weeklysummary.getDailyMacro(0);
-                break;
-            case "tue":
-                selected = weeklysummary.getDailyMacro(1);
-                break;
-            case "wed":
-                selected = weeklysummary.getDailyMacro(2);
-                break;
-            case "thu":
-                selected = weeklysummary.getDailyMacro(3);
-                break;
-            case "fri":
-                selected = weeklysummary.getDailyMacro(4);
-                break;
-            case "sat":
-                selected = weeklysummary.getDailyMacro(5);
-                break;
-            case "sun":
-                selected = weeklysummary.getDailyMacro(6);
-                break;
+        try {
+            switch (command) {
+                case "mon":
+                    selected = weeklysummary.getDailyMacro(0);
+                    break;
+                case "tue":
+                    selected = weeklysummary.getDailyMacro(1);
+                    break;
+                case "wed":
+                    selected = weeklysummary.getDailyMacro(2);
+                    break;
+                case "thu":
+                    selected = weeklysummary.getDailyMacro(3);
+                    break;
+                case "fri":
+                    selected = weeklysummary.getDailyMacro(4);
+                    break;
+                case "sat":
+                    selected = weeklysummary.getDailyMacro(5);
+                    break;
+                case "sun":
+                    selected = weeklysummary.getDailyMacro(6);
+                    break;
+            }
+        } catch (InvalidWeekIndexException e) {
+            System.out.println("Amount must be greater than 0");
         }
-
     }
 
     //Reference: this method was built with reference to CPSC210 TellerApp provided on CPSC210 edX edge
@@ -301,10 +306,13 @@ public class TrackerApp {
 
         System.out.print("Enter grams of fat consumed\n");
         int fatAmount = input.nextInt();
-
-        selected.addCarbsConsumed(carbsAmount);
-        selected.addProteinConsumed(proteinAmount);
-        selected.addFatConsumed(fatAmount);
+        try {
+            selected.addCarbsConsumed(carbsAmount);
+            selected.addProteinConsumed(proteinAmount);
+            selected.addFatConsumed(fatAmount);
+        } catch (InvalidAmountException e) {
+            System.out.println("Amount must be greater than 0");
+        }
     }
 
     //EFFECTS: prints summary of daily intake and goals

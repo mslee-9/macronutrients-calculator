@@ -1,6 +1,7 @@
 package persistence;
 
 import model.DailyMacros;
+import model.Exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import org.junit.jupiter.api.Test;
 
@@ -40,9 +41,10 @@ class JsonWriterTest extends JsonTest{
             ws = reader.read();
             assertEquals("My weekly summary", ws.getName());
             checkDailyMacros(2000, 200, 150, 50, monday);
-
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        } catch (InvalidWeekIndexException e) {
+            fail();
         }
     }
 }

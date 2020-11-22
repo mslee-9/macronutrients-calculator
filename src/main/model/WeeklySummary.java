@@ -1,5 +1,6 @@
 package model;
 
+import model.Exceptions.InvalidWeekIndexException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -24,9 +25,11 @@ public class WeeklySummary implements Writable {
         }
     }
 
-    //REQUIRES: 0<= index <= 6
     //EFFECTS: returns DailyMacros instance at corresponding index from sevenDayRecord
-    public DailyMacros getDailyMacro(int index) {
+    public DailyMacros getDailyMacro(int index) throws InvalidWeekIndexException {
+        if (index < 0 || index > 6) {
+            throw new InvalidWeekIndexException();
+        }
         return sevenDayRecord.get(index);
     }
 
