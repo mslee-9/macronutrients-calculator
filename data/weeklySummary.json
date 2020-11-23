@@ -11,16 +11,6 @@
             "carbs consumed (g)": 0
         },
         {
-            "calorie goal": 3,
-            "calories consumed": 39,
-            "protein goal (g)": 0,
-            "carbs goal (g)": 0,
-            "fat goal (g)": 0,
-            "protein consumed (g)": 2,
-            "fat consumed (g)": 3,
-            "carbs consumed (g)": 1
-        },
-        {
             "calorie goal": 0,
             "calories consumed": 0,
             "protein goal (g)": 0,
@@ -29,6 +19,16 @@
             "protein consumed (g)": 0,
             "fat consumed (g)": 0,
             "carbs consumed (g)": 0
+        },
+        {
+            "calorie goal": 200,
+            "calories consumed": 124,
+            "protein goal (g)": 15,
+            "carbs goal (g)": 20,
+            "fat goal (g)": 7,
+            "protein consumed (g)": 7,
+            "fat consumed (g)": 8,
+            "carbs consumed (g)": 6
         },
         {
             "calorie goal": 0,
@@ -71,5 +71,5 @@
             "carbs consumed (g)": 0
         }
     ],
-    "name & week": "s"
+    "name & week": "sol"
 }

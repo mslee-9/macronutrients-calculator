@@ -4,22 +4,23 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 
+//Sound Effects class containing methods for playing wav files in the data folder
 public class SoundEffects {
+    File startSound = new File("./data/enterChime.wav");
+    File exitBeep = new File("./data/exitBeep.wav");
 
-    public SoundEffects() {
+    //EFFECTS: plays start sound
+    public void playStartSound() {
+        playSoundFile(startSound);
     }
 
-    public static void playStartSound() {
-        File sound = new File("./data/enterChime.wav");
-        playSoundFile(sound);
+    //EFFECTS: plays exit beep
+    public void playExitSound() {
+        playSoundFile(exitBeep);
     }
 
-    public static void playExitSound() {
-        File sound = new File("./data/exitBeep.wav");
-        playSoundFile(sound);
-    }
-
-    private static void playSoundFile(File sound) {
+    //EFFECTS: plays given sound file
+    private void playSoundFile(File sound) {
         Clip c;
         try {
             c = AudioSystem.getClip();

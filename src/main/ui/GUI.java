@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.List;
-import javax.sound.sampled.*;
 
 //SOURCES (This class was built using demo's in the websites below):
 //     Stack OverFlow: https://stackoverflow.com/questions/6578205/swing-jlabel-text-change-on-the-running-application
@@ -25,6 +24,7 @@ public class GUI extends JFrame implements ActionListener {
     private static final String JSON_STORE = "./data/weeklySummary.json";
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private SoundEffects soundEffects = new SoundEffects();
 
     private final Color blue = new Color(223, 247, 252);
     private final Color lilac = new Color(230, 229, 255);
@@ -36,7 +36,6 @@ public class GUI extends JFrame implements ActionListener {
     private JLabel loadLabel = new JLabel();
     private JLabel printLabel = new JLabel();
     private JLabel welcomeLabel;
-    private JPanel trackerPanel;
     private JLabel daysOfWeek;
     private JLabel calorieGoalInput;
     private JLabel fatGoalInput;
@@ -68,13 +67,11 @@ public class GUI extends JFrame implements ActionListener {
     private JFrame saveFrame;
     private JFrame mealTrackerFrame;
 
+    private JPanel trackerPanel;
     private JPanel savePanel;
     private JPanel mealTrackerPanel;
 
     private String daySelected;
-    String carbsGoalString;
-    String proteinGoalString;
-    String fatGoalString;
 
     //EFFECTS: constructs GUI class and calls method to construct main panel
     public GUI() {
@@ -362,22 +359,24 @@ public class GUI extends JFrame implements ActionListener {
     //EFFECTS: Prompts user to input calorie goals and when "Enter" button is clicked, call method to set calorie goals
     //         Once valid calorie goal was inputted, call method to prompt inputting of Macros goals
     public void setCalorieGoals() {
+        enterButton3.setVisible(false);
+        calorieGoal.setVisible(false);
+
         String calorieGoalText = calorieGoal.getText();
         calorieGoalInput.setText("Daily Calorie Goal: " + calorieGoalText + " kcal");
-        int calorieGoalInt = Integer.parseInt(calorieGoalText);
+        trackerPanel.setVisible(true);
+        calorieGoalInput.setVisible(true);
 
+        int calorieGoalInt = Integer.parseInt(calorieGoalText);
         if (calorieGoalInt > 0) {
             selected.setCalorieGoal(calorieGoalInt);
             inputMacrosGoals();
 
         } else {
-            calorieGoal.setVisible(false);
-            enterButton3.setVisible(false);
             JLabel calorieUnderZero = new JLabel("Calorie goal must be greater than zero...");
             trackerPanel.add(calorieUnderZero);
             inputCalorieGoals();
         }
-        trackerFrame.setVisible(true);
     }
 
     //MODIFIES: this
@@ -414,9 +413,9 @@ public class GUI extends JFrame implements ActionListener {
     //         Percentage Macro goals
     //         If invalid percentages were entered, prompts reader to enter again else call displayMacroBreakdown
     private void setMacroGoals() {
-        carbsGoalString = carbsGoal.getText();
-        proteinGoalString = proteinGoal.getText();
-        fatGoalString = fatGoal.getText();
+        String carbsGoalString = carbsGoal.getText();
+        String proteinGoalString = proteinGoal.getText();
+        String fatGoalString = fatGoal.getText();
 
         carbsGoal.setVisible(false);
         proteinGoal.setVisible(false);
@@ -464,9 +463,6 @@ public class GUI extends JFrame implements ActionListener {
         trackerPanel.add(proteinBreakdown);
         trackerPanel.add(Box.createVerticalStrut(10));
         trackerPanel.add(fatBreakdown);
-        trackerPanel.setVisible(true);
-        trackerFrame.setVisible(true);
-
         continueTracking();
     }
 
@@ -590,11 +586,11 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private void playStartSound() {
-        SoundEffects.playStartSound();
+        soundEffects.playStartSound();
     }
 
     private void playExitSound() {
-        SoundEffects.playExitSound();
+        soundEffects.playExitSound();
     }
 
     //MODIFIES: this
