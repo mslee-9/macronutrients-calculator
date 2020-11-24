@@ -1,7 +1,6 @@
 package model;
 
-import model.Exceptions.InvalidAmountException;
-import model.Exceptions.InvalidWeekIndexException;
+import model.exceptions.InvalidAmountException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

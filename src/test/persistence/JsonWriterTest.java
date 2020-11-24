@@ -1,7 +1,7 @@
 package persistence;
 
 import model.DailyMacros;
-import model.Exceptions.InvalidWeekIndexException;
+import model.exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import org.junit.jupiter.api.Test;
 

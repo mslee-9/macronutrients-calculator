@@ -2,8 +2,8 @@ package ui;
 
 
 import model.DailyMacros;
-import model.Exceptions.InvalidAmountException;
-import model.Exceptions.InvalidWeekIndexException;
+import model.exceptions.InvalidAmountException;
+import model.exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -168,31 +168,31 @@ public class TrackerApp {
     //EFFECTS: selects day of the week, monday through sunday, in weekly summary
     public void selectDay(String command) {
         try {
-            switch (command) {
-                case "mon":
-                    selected = weeklysummary.getDailyMacro(0);
-                    break;
-                case "tue":
-                    selected = weeklysummary.getDailyMacro(1);
-                    break;
-                case "wed":
-                    selected = weeklysummary.getDailyMacro(2);
-                    break;
-                case "thu":
-                    selected = weeklysummary.getDailyMacro(3);
-                    break;
-                case "fri":
-                    selected = weeklysummary.getDailyMacro(4);
-                    break;
-                case "sat":
-                    selected = weeklysummary.getDailyMacro(5);
-                    break;
-                case "sun":
-                    selected = weeklysummary.getDailyMacro(6);
-                    break;
-            }
+            selected = weeklysummary.getDailyMacro(selectDayOfWeekIndex(command));
         } catch (InvalidWeekIndexException e) {
             System.out.println("Amount must be greater than 0");
+        }
+    }
+
+    //REQUIRES: command is one of mon, tue, wed, thu, fri, sat, and sun
+    //EFFECTS: returns the appropriate index of week between 0 to 6 inclusive,
+    //         where 0 indicates Monday and 6 indicates Sunday
+    public int selectDayOfWeekIndex(String command) {
+        switch (command) {
+            case "mon":
+                return 0;
+            case "tue":
+                return 1;
+            case "wed":
+                return 2;
+            case "thu":
+                return 3;
+            case "fri":
+                return 4;
+            case "sat":
+                return 5;
+            default:
+                return 6;
         }
     }
 

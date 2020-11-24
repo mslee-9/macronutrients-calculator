@@ -1,13 +1,10 @@
 package persistence;
 
-import model.DailyMacros;
-import model.Exceptions.InvalidWeekIndexException;
+import model.exceptions.InvalidWeekIndexException;
 import model.WeeklySummary;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 

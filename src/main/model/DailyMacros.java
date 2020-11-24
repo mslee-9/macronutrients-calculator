@@ -1,7 +1,6 @@
 package model;
 
-import model.Exceptions.InvalidAmountException;
-import org.json.JSONArray;
+import model.exceptions.InvalidAmountException;
 import org.json.JSONObject;
 import persistence.Writable;
 

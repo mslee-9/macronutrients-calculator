@@ -1,6 +1,6 @@
 package model;
 
-import model.Exceptions.InvalidWeekIndexException;
+import model.exceptions.InvalidWeekIndexException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
