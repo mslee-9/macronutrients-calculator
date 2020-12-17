@@ -6,6 +6,7 @@ import persistence.Writable;
 
 // Represents a day's calories & macronutrient goals and records
 public class DailyMacros implements Writable {
+
     private static final int calPerGramCarb = 4;
     private static final int calPerGramProtein = 4;
     private static final int calPerGramFat = 9;

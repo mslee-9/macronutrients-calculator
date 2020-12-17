@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 //SOURCE: JsonSerializationDemo - this class was built based on JsonSerializationDemo
 // Represents a writer that writes JSON representation of weekly summary to file
 public class JsonWriter {
+
     private static final int TAB = 4;
     private PrintWriter writer;
     private String destination;

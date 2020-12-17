@@ -11,6 +11,7 @@ import java.util.List;
 
 // Represents a collection of records of each day in a week from Monday through Sunday
 public class WeeklySummary implements Writable {
+
     private String name;
     private ArrayList<DailyMacros> sevenDayRecord;
 
