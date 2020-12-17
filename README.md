@@ -22,5 +22,4 @@ my food intake, I became familiar with the appropriate intake for myself and pau
 
 However, now having no access to public gyms and different fitness goals, I thought a calories & macronutrients 
 tracking application where I can add needed functionalities as I see fit would not only be interesting, but be 
-helpful in improving my health and overall wellness. 
-# Macronutrient-Calculator
+helpful in improving my health and overall wellness. # macronutrients-calculator
